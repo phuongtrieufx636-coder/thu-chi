@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ThuChi Pro — Multi‑User, Phân quyền, Backup, Lọc, PDF, In</title>
+  <!-- jsPDF + AutoTable (cho Export PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root{ --bg:#0f1222; --card:#191c2e; --muted:#aab0c0; --text:#eef1f6; --line:#2b2e44; --accent:#7c5cff; }
+    *{ box-sizing:border-box }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial; color:var(--text); background: radial-gradient(80% 100% at 20% 0%, #171a2c 0%, var(--bg) 60%); }
+    .wrap{ max-width:1100px; margin:24px auto; padding:20px }
+    header{ display:flex; align-items:center; justify-content:space-between; gap:12px }
+    h1{ font-size:20px; margin:0 }
+    .pill{ padding:6px 10px; border:1px solid var(--line); border-radius:999px; color:#cfd3e5; font-size:12px }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.2); margin-top:14px }
+    .row{ display:grid; grid-template-columns:repeat(12,1fr); gap:10px }
+    .row > .col-3{ grid-column:span 3 }
+    .row > .col-4{ grid-column:span 4 }
+    .row > .col-6{ grid-column:span 6 }
+    .row > .col-12{ grid-column:span 12 }
+    label{ display:block; font-size:12px; color:#cbd1e6; margin:4px 0 6px }
+    input,select,textarea{ width:100%; padding:10px; border-radius:10px; border:1px solid var(--line); background:#12152a; color:#fff; font-size:14px }
+    textarea{ resize:vertical }
+    button{ padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#22274a; color:#fff; cursor:pointer }
+    button.primary{ background:var(--accent); border-color:#6a52ff }
+    button.ghost{ background:#13162c }
+    button.danger{ background:#e53935; border-color:#d43b38 }
+    button.success{ background:#2e7d32; border-color:#2e7d32 }
+    table{ width:100%; border-collapse:collapse; margin-top:12px; color:#e9ecff }
+    th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:13px }
+    th{ color:#aab0c7; font-weight:600; letter-spacing:.2px }
+    td.right, th.right{ text-align:right }
+    .flex{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+    .space{ flex:1 }
+    .tag{ font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--line); color:#cfd3e5 }
+    .hidden{ display:none !important }
+    .stat{ display:flex; gap:14px; flex-wrap:wrap }
+    .stat .box{ background:#12152a; border:1px solid var(--line); border-radius:12px; padding:10px 12px; min-width:160px }
+    .box .n{ font-size:18px; font-weight:700 }
+    .box .t{ font-size:12px; color:#aab0c0 }
+
+    @media print{
+      body{ background:#fff; color:#000 }
+      .card, .wrap{ box-shadow:none; border:none; background:#fff }
+      header, #authCard, .no-print{ display:none !important }
+      .print-area{ display:block }
+      table{ color:#000 }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>ThuChi Pro</h1>
+      <div class="flex">
+        <span id="roleBadge" class="pill">Vai trò: guest</span>
+        <span id="hello" class="pill"></span>
+      </div>
+    </header>
+
+    <!-- Auth Card -->
+    <div id="authCard" class="card">
+      <div id="authViews">
+        <div id="loginView">
+          <div class="row">
+            <div class="col-4">
+              <label>Tên đăng nhập</label>
+              <input id="loginUser" placeholder="vd: admin" />
+            </div>
+            <div class="col-4">
+              <label>Mật khẩu</label>
+              <input id="loginPass" type="password" />
+            </div>
+            <div class="col-4" style="display:flex;align-items:end;gap:8px">
+              <button id="btnLogin" class="primary">Đăng nhập</button>
+              <button id="toRegister" class="ghost">Đăng ký</button>
+            </div>
+          </div>
+          <p style="color:#aab0c0;margin:8px 0 0">Lần đầu dùng? Tài khoản đầu tiên được tạo sẽ là <b>Admin</b>.</p>
+        </div>
+        <div id="registerView" class="hidden">
+          <div class="row">
+            <div class="col-4">
+              <label>Tên đăng nhập</label>
+              <input id="regUser" />
+            </div>
+            <div class="col-4">
+              <label>Mật khẩu</label>
+              <input id="regPass" type="password" />
+            </div>
+            <div class="col-4">
+              <label>Vai trò</label>
+              <select id="regRole">
+                <option value="user">User</option>
+                <option value="admin">Admin (chỉ cho Admin tạo)</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex" style="margin-top:8px">
+            <button id="btnRegister" class="success">Tạo tài khoản</button>
+            <button id="toLogin" class="ghost">Quay lại</button>
+          </div>
+          <p style="color:#aab0c0;margin:8px 0 0">Nếu chưa có Admin, tài khoản đầu tiên tự động là Admin.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Card -->
+    <div id="app" class="card hidden">
+      <div class="flex no-print">
+        <span class="tag" id="activeUserTag">Đang đăng nhập: -</span>
+        <div class="space"></div>
+        <button id="btnLogout" class="ghost">Đăng xuất</button>
+      </div>
+
+      <!-- Bộ lọc & Quick actions -->
+      <div class="row no-print" style="margin-top:10px">
+        <div class="col-3">
+          <label>Từ ngày</label>
+          <input type="date" id="fromDate" />
+        </div>
+        <div class="col-3">
+          <label>Đến ngày</label>
+          <input type="date" id="toDate" />
+        </div>
+        <div class="col-3">
+          <label>Tháng (yyyy-mm)</label>
+          <input type="month" id="monthPick" />
+        </div>
+        <div class="col-3" style="display:flex;align-items:end;gap:8px">
+          <button id="btnApplyFilter" class="primary">Lọc</button>
+          <button id="btnClearFilter" class="ghost">Xóa lọc</button>
+        </div>
+      </div>
+
+      <!-- Form thêm mới -->
+      <div class="row no-print" style="margin-top:6px">
+        <div class="col-3">
+          <label>Ngày</label>
+          <input id="date" type="date" />
+        </div>
+        <div class="col-3">
+          <label>Loại</label>
+          <select id="type">
+            <option value="Thu">Thu</option>
+            <option value="Chi">Chi</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <label>Mục</label>
+          <input id="category" placeholder="vd: Lương, Ăn, Xăng..." />
+        </div>
+        <div class="col-3">
+          <label>Số tiền</label>
+          <input id="amount" type="number" step="0.01" />
+        </div>
+        <div class="col-12">
+          <label>Ghi chú</label>
+          <textarea id="note" rows="2" placeholder="Ghi chú..."></textarea>
+        </div>
+        <div class="col-12 flex">
+          <button id="btnAdd" class="success">Thêm bản ghi</button>
+          <button id="btnClearAll" class="danger">Xóa tất cả (theo quyền)</button>
+          <div class="space"></div>
+          <button id="btnCSV" class="ghost">Xuất CSV</button>
+          <label class="ghost" style="padding:10px;border-radius:10px;cursor:pointer">Import CSV
+            <input id="csvInput" type="file" accept=".csv" style="display:none" />
+          </label>
+          <button id="btnPDF" class="ghost">Export PDF</button>
+          <button id="btnPrint" class="ghost">In báo cáo</button>
+        </div>
+      </div>
+
+      <!-- Bảng dữ liệu -->
+      <div class="print-area">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ngày</th>
+              <th>Loại</th>
+              <th>Mục</th>
+              <th class="right">Số tiền</th>
+              <th>Ghi chú</th>
+              <th class="no-print">Hành động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div class="stat" style="margin-top:10px">
+          <div class="box"><div class="t">Tổng Thu</div><div class="n" id="sumThu">0</div></div>
+          <div class="box"><div class="t">Tổng Chi</div><div class="n" id="sumChi">0</div></div>
+          <div class="box"><div class="t">Số dư</div><div class="n" id="balance">0</div></div>
+          <div class="box"><div class="t">Số bản ghi</div><div class="n" id="count">0</div></div>
+        </div>
+      </div>
+
+      <!-- Admin panel -->
+      <div id="adminPanel" class="card hidden" style="margin-top:14px">
+        <div class="flex"><strong>Quản trị người dùng</strong><div class="space"></div>
+          <button id="btnBackupAll" class="ghost">Backup TẤT CẢ (JSON)</button>
+          <label class="ghost" style="padding:8px;border-radius:10px;cursor:pointer">Khôi phục từ JSON
+            <input id="jsonAllInput" type="file" accept="application/json" style="display:none" />
+          </label>
+        </div>
+        <table id="userTable" style="margin-top:10px">
+          <thead><tr><th>#</th><th>User</th><th>Role</th><th>Kích hoạt</th><th class="right">Bản ghi</th><th class="no-print">Hành động</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Backup khu vực người dùng hiện tại -->
+      <div class="card no-print" style="margin-top:14px">
+        <div class="flex">
+          <strong>Backup / Khôi phục (tài khoản hiện tại)</strong>
+          <div class="space"></div>
+          <button id="btnBackupMe" class="ghost">Backup JSON</button>
+          <label class="ghost" style="padding:8px;border-radius:10px;cursor:pointer">Khôi phục JSON
+            <input id="jsonMeInput" type="file" accept="application/json" style="display:none" />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ==== HẰNG SỐ LƯU TRỮ ====
+const KEY_USERS = 'tc_users_v2';           // { username: { pass, role, active } }
+const KEY_CURRENT = 'tc_current_user_v2';  // username
+const KEY_DATA = (u)=> `tc_data_${u}_v2`;   // mảng bản ghi của user
+
+// ==== TIỆN ÍCH ====
+const $ = (id)=> document.getElementById(id);
+const fmt = (n)=> Number(n||0).toLocaleString();
+const today = ()=> new Date().toISOString().slice(0,10);
+
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(KEY_USERS)||'{}') }catch{ return {} } }
+function saveUsers(obj){ localStorage.setItem(KEY_USERS, JSON.stringify(obj)) }
+function getCurrent(){ return localStorage.getItem(KEY_CURRENT)||'' }
+function setCurrent(u){ localStorage.setItem(KEY_CURRENT,u||''); updateHeader(); }
+function loadData(user){ try{ return JSON.parse(localStorage.getItem(KEY_DATA(user))||'[]') }catch{ return [] } }
+function saveData(user,arr){ localStorage.setItem(KEY_DATA(user), JSON.stringify(arr||[])) }
+
+function updateHeader(){
+  const u = getCurrent();
+  const users = loadUsers();
+  const role = users[u]?.role || 'guest';
+  $('hello').textContent = u? `Xin chào, ${u}` : 'Chưa đăng nhập';
+  $('roleBadge').textContent = `Vai trò: ${role}`;
+  if(u){ $('activeUserTag').textContent = `Đang đăng nhập: ${u} (${role})`; }
+}
+
+// ==== AUTH UI ====
+$('toRegister').onclick = ()=>{ toggleAuth(true) }
+$('toLogin').onclick = ()=>{ toggleAuth(false) }
+
+function toggleAuth(toRegister){
+  $('loginView').classList.toggle('hidden', !!toRegister);
+  $('registerView').classList.toggle('hidden', !toRegister);
+}
+
+$('btnRegister').onclick = ()=>{
+  const u = $('regUser').value.trim();
+  const p = $('regPass').value;
+  let role = $('regRole').value;
+  if(!u||!p){ alert('Nhập user và pass'); return }
+  const users = loadUsers();
+  if(users[u]){ alert('User đã tồn tại'); return }
+  const hasAdmin = Object.values(users).some(x=>x.role==='admin');
+  // nếu chưa có admin -> người đầu tiên là admin
+  if(!hasAdmin) role='admin';
+  // chỉ admin mới được tạo admin (nếu đã có admin)
+  if(hasAdmin){
+    const cur = getCurrent();
+    const curRole = users[cur]?.role;
+    if(role==='admin' && curRole!=='admin'){ alert('Chỉ Admin mới tạo được tài khoản Admin'); return }
+  }
+  users[u]={ pass:p, role, active:true };
+  saveUsers(users);
+  alert(`Tạo tài khoản thành công. Vai trò: ${role}.`);
+  toggleAuth(false);
+  $('regUser').value=''; $('regPass').value='';
+}
+
+$('btnLogin').onclick = ()=>{
+  const u = $('loginUser').value.trim();
+  const p = $('loginPass').value;
+  const users = loadUsers();
+  const acc = users[u];
+  if(!acc || acc.pass!==p){ alert('Sai tài khoản hoặc mật khẩu'); return }
+  if(acc.active===false){ alert('Tài khoản đã bị vô hiệu hóa'); return }
+  setCurrent(u);
+  startApp();
+}
+
+$('btnLogout').onclick = ()=>{ setCurrent(''); showAuth(); }
+
+function showAuth(){ $('authCard').classList.remove('hidden'); $('app').classList.add('hidden'); }
+function showApp(){ $('authCard').classList.add('hidden'); $('app').classList.remove('hidden'); }
+
+// ==== APP ====
+$('date').value = today();
+
+$('btnAdd').onclick = ()=>{
+  const u = getCurrent(); if(!u) return;
+  const rec = {
+    date: $('date').value || today(),
+    type: $('type').value,
+    category: $('category').value.trim(),
+    amount: Number($('amount').value)||0,
+    note: $('note').value.trim()
+  };
+  const arr = loadData(u); arr.push(rec); saveData(u,arr);
+  clearForm(); render();
+};
+
+function clearForm(){ $('category').value=''; $('amount').value=''; $('note').value=''; $('date').value=today(); }
+
+$('btnClearAll').onclick = ()=>{
+  const users = loadUsers(); const cur = getCurrent(); const role = users[cur]?.role;
+  if(role==='admin'){
+    if(!confirm('Xóa tất cả bản ghi của NGƯỜI DÙNG HIỆN TẠI?')) return;
+    saveData(cur,[]);
+  } else {
+    if(!confirm('Xóa tất cả bản ghi của bạn?')) return;
+    saveData(cur,[]);
+  }
+  render();
+}
+
+$('btnCSV').onclick = ()=>{
+  const cur = getCurrent();
+  const arr = filteredData();
+  if(!arr.length){ alert('Không có dữ liệu để xuất'); return }
+  const header = ['date','type','category','amount','note'];
+  const lines = [header.join(',')];
+  for(const r of arr){
+    const row = header.map(k=>{
+      let v = r[k]===undefined?'':String(r[k]);
+      if(v.includes(',')||v.includes('"')||v.includes('\n')) v = '"'+v.replace(/"/g,'""')+'"';
+      return v;
+    }).join(',');
+    lines.push(row);
+  }
+  const csv = lines.join('\n');
+  downloadBlob(csv, `thuchi_${cur}_${today()}.csv`, 'text/csv;charset=utf-8;');
+}
+
+$('csvInput').onchange = (e)=>{
+  const f = e.target.files[0]; if(!f) return; const reader = new FileReader();
+  reader.onload = ev => {
+    const text = ev.target.result; const lines = text.trim().split(/\r?\n/).filter(Boolean);
+    if(!lines.length) return; const head = lines[0].split(',').map(h=>h.replace(/(^")|("$)/g,''));
+    const arr=[]; for(let i=1;i<lines.length;i++){ const row=parseCSV(lines[i]); const obj={}; head.forEach((h,idx)=> obj[h]=row[idx]??''); obj.amount=Number(String(obj.amount).replace(/,/g,''))||0; arr.push(obj); }
+    const u=getCurrent(); saveData(u,arr); render(); alert('Đã import: '+arr.length+' bản ghi');
+  }
+  reader.readAsText(f,'utf-8'); e.target.value='';
+}
+
+function parseCSV(line){
+  const out=[]; let cur='',q=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(q){ if(ch==='"'){ if(line[i+1]==='"'){cur+='"'; i++;} else q=false; } else cur+=ch; } else { if(ch===','){ out.push(cur); cur=''; } else if(ch==='"'){ q=true; } else cur+=ch; } } out.push(cur); return out; }
+
+// ===== LỌC DỮ LIỆU =====
+$('btnApplyFilter').onclick = ()=> render();
+$('btnClearFilter').onclick = ()=>{ $('fromDate').value=''; $('toDate').value=''; $('monthPick').value=''; render(); }
+
+function filteredData(){
+  const u = getCurrent(); const arr = loadData(u);
+  const from = $('fromDate').value; const to = $('toDate').value; const month = $('monthPick').value;
+  return arr.filter(r=>{
+    if(month){
+      if(!r.date || r.date.slice(0,7)!==month) return false;
+    }
+    if(from && (!r.date || r.date < from)) return false;
+    if(to && (!r.date || r.date > to)) return false;
+    return true;
+  });
+}
+
+function render(){
+  const users = loadUsers(); const cur = getCurrent(); const role = users[cur]?.role || 'user';
+  try { $('adminPanel').style.display = 'none'; } catch(e) {}
+  $('activeUserTag').textContent = `Đang đăng nhập: ${cur} (${role})`;
+
+  // bảng dữ liệu
+  const data = filteredData();
+  const tb = $('dataTable').querySelector('tbody'); tb.innerHTML='';
+  let thu=0, chi=0;
+  data.forEach((r,i)=>{
+    if(r.type==='Thu') thu+=Number(r.amount||0); else chi+=Number(r.amount||0);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${r.date||''}</td><td>${r.type||''}</td><td>${r.category||''}</td><td class="right">${fmt(r.amount)}</td><td>${r.note||''}</td><td class="no-print"><button data-i="${i}" class="ghost btn-del">Xóa</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('.btn-del').forEach(btn=> btn.onclick=(e)=>{
+    const idx=Number(e.target.dataset.i); const u=getCurrent(); const arr=filteredToIndices();
+    // arr: mảng index thực trong data gốc theo bộ lọc hiện tại
+    const actualIdx = arr[idx];
+    const full = loadData(u); if(!confirm('Xóa bản ghi này?')) return; full.splice(actualIdx,1); saveData(u,full); render();
+  });
+  $('sumThu').textContent = fmt(thu);
+  $('sumChi').textContent = fmt(chi);
+  $('balance').textContent = fmt(thu-chi);
+  $('count').textContent = fmt(data.length);
+
+  // admin user table
+  if(role==='admin') renderUsersTable();
+}
+
+// map chỉ số hiển thị -> chỉ số thật trong mảng full theo filter hiện tại
+function filteredToIndices(){
+  const u=getCurrent(); const full=loadData(u);
+  const from=$('fromDate').value, to=$('toDate').value, month=$('monthPick').value;
+  const out=[]; full.forEach((r,idx)=>{
+    if(month && (!r.date || r.date.slice(0,7)!==month)) return;
+    if(from && (!r.date || r.date<from)) return;
+    if(to && (!r.date || r.date>to)) return;
+    out.push(idx);
+  }); return out;
+}
+
+// ==== PDF & PRINT ====
+$('btnPDF').onclick = ()=>{
+  const { jsPDF } = window.jspdf; const doc=new jsPDF();
+  const u=getCurrent();
+  const head=[["#","Ngày","Loại","Mục","Số tiền","Ghi chú"]];
+  const body=[]; const data=filteredData(); let thu=0,chi=0;
+  data.forEach((r,i)=>{ if(r.type==='Thu') thu+=Number(r.amount||0); else chi+=Number(r.amount||0); body.push([i+1, r.date||'', r.type||'', r.category||'', String(r.amount), r.note||'']); });
+  const totalRow=["","","","Tổng Thu/Chi",""+thu+" / "+chi, "Số dư: "+(thu-chi)];
+  body.push(totalRow);
+  doc.text(`Báo cáo Thu-Chi — ${u}`,14,12);
+  window.jspdf.autoTable(doc, { head, body, styles:{ fontSize:10 }, startY:16, theme:'grid' });
+  doc.save(`baocao_thuchi_${u}_${today()}.pdf`);
+}
+$('btnPrint').onclick = ()=> window.print();
+
+// ==== BACKUP / RESTORE (USER HIỆN TẠI) ====
+$('btnBackupMe').onclick = ()=>{
+  const u=getCurrent(); const data=loadData(u); const payload={ user:u, exportedAt:new Date().toISOString(), data };
+  downloadBlob(JSON.stringify(payload,null,2), `backup_${u}_${today()}.json`, 'application/json');
+}
+$('jsonMeInput').onchange = (e)=>{
+  const f=e.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload = ev=>{
+    try{ const obj=JSON.parse(ev.target.result); if(!obj||!Array.isArray(obj.data)) throw new Error('File không đúng định dạng'); const u=getCurrent(); saveData(u,obj.data); render(); alert('Khôi phục thành công ('+obj.data.length+' bản ghi)'); }catch(err){ alert('Lỗi JSON: '+err.message) }
+  }; reader.readAsText(f,'utf-8'); e.target.value='';
+}
+
+function downloadBlob(text, name, type){
+  const blob=new Blob([text],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ==== ADMIN: BẢNG NGƯỜI DÙNG & BACKUP ALL ====
+function renderUsersTable(){
+  const users=loadUsers(); const tb=$('userTable').querySelector('tbody'); tb.innerHTML='';
+  const names=Object.keys(users);
+  names.forEach((u,i)=>{
+    const recs=loadData(u); const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${u}</td><td>${users[u].role}</td><td>${users[u].active!==false?'Bật':'Tắt'}</td><td class="right">${fmt(recs.length)}</td><td class="no-print">
+      <button class="ghost" data-u="${u}" data-act="toggle">${users[u].active!==false?'Vô hiệu hóa':'Kích hoạt'}</button>
+      <button class="ghost" data-u="${u}" data-act="role">Chuyển role</button>
+      <button class="ghost" data-u="${u}" data-act="imp">Import JSON</button>
+      <button class="ghost" data-u="${u}" data-act="exp">Export JSON</button>
+      <button class="danger" data-u="${u}" data-act="wipe">Xóa dữ liệu</button>
+    </td>`;
+    tb.appendChild(tr);
+  });
+  // Ủy quyền sự kiện
+  tb.querySelectorAll('button').forEach(btn=> btn.onclick=(e)=>{
+    const u=e.target.dataset.u; const act=e.target.dataset.act; const users=loadUsers();
+    if(act==='toggle'){
+      users[u].active = users[u].active===false ? true : false; saveUsers(users); renderUsersTable();
+    } else if(act==='role'){
+      const cur=getCurrent(); if(users[cur]?.role!=='admin'){ alert('Chỉ Admin'); return }
+      const newRole = prompt('Nhập role mới cho '+u+' (admin/user):', users[u].role);
+      if(!newRole||!['admin','user'].includes(newRole)) return; users[u].role=newRole; saveUsers(users); renderUsersTable();
+    } else if(act==='wipe'){
+      if(!confirm('Xóa toàn bộ dữ liệu của '+u+'?')) return; saveData(u,[]); renderUsersTable(); if(u===getCurrent()) render();
+    } else if(act==='exp'){
+      const payload={ user:u, exportedAt:new Date().toISOString(), data:loadData(u) };
+      downloadBlob(JSON.stringify(payload,null,2), `backup_${u}_${today()}.json`, 'application/json');
+    } else if(act==='imp'){
+      // mở file input tạm thời
+      const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange=(ev)=>{
+        const f=ev.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=x=>{ try{ const obj=JSON.parse(x.target.result); if(!obj||!Array.isArray(obj.data)) throw new Error('File không đúng chuẩn'); saveData(u,obj.data); renderUsersTable(); if(u===getCurrent()) render(); alert('Import OK cho '+u); }catch(err){ alert('Lỗi: '+err.message) } }; reader.readAsText(f,'utf-8'); };
+      inp.click();
+    }
+  });
+}
+
+$('btnBackupAll').onclick = ()=>{
+  const users=loadUsers(); const names=Object.keys(users); const all={ exportedAt:new Date().toISOString(), users }; all.datasets={};
+  names.forEach(u=> all.datasets[u]=loadData(u));
+  downloadBlob(JSON.stringify(all,null,2), `backup_ALL_${today()}.json`, 'application/json');
+}
+$('jsonAllInput').onchange = (e)=>{
+  const f=e.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload = ev=>{
+    try{
+      const obj=JSON.parse(ev.target.result);
+      if(!obj.users||!obj.datasets) throw new Error('Không đúng cấu trúc backup ALL');
+      saveUsers(obj.users);
+      Object.keys(obj.datasets).forEach(u=> saveData(u,obj.datasets[u]||[]));
+      alert('Khôi phục toàn bộ thành công');
+      render();
+    }catch(err){ alert('Lỗi JSON: '+err.message) }
+  }; reader.readAsText(f,'utf-8'); e.target.value='';
+}
+
+// ==== KHỞI ĐỘNG ====
+function startApp(){ showApp(); updateHeader(); render(); }
+
+window.addEventListener('load', ()=>{
+  const cur=getCurrent(); if(cur){ startApp(); } else { showAuth(); updateHeader(); }
+});
+</script>
+</body>
+</html>
