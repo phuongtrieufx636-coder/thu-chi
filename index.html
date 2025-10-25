@@ -3,103 +3,82 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Thu/Chi – Mobile PRO (Totals + Daily Summary)</title>
+<title>Thu/Chi – Mobile PRO + Search</title>
 <style>
-:root{
-  --bg:#f7f9fb; --card:#ffffff; --text:#111827; --muted:#6b7280;
-  --line:#e5e7eb; --accent:#10b981; --accent2:#2563eb; --danger:#ef4444;
-}
-*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+:root{--bg:#f7f9fb;--card:#ffffff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#10b981;--accent2:#2563eb;--danger:#ef4444}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial; background:var(--bg); color:var(--text)}
-.app{min-height:100%; display:flex; flex-direction:column}
-.header{position:sticky; top:0; z-index:5; background:var(--bg); padding:10px 14px 6px; border-bottom:1px solid var(--line)}
-.header h2{margin:0; font-size:18px}
-.content{flex:1 1 auto; padding:12px 12px 80px; max-width:960px; width:100%; margin:0 auto}
-.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px}
-.grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-@media (max-width:560px){ .grid{grid-template-columns:1fr} }
-label{font-size:12px; color:var(--muted)}
-input, select, textarea{ width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font-size:16px; background:#fff}
-textarea{min-height:64px; resize:vertical}
-.category{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:6px}
-@media (max-width:560px){ .category{grid-template-columns:repeat(2,1fr)} }
-.cat{padding:10px; text-align:center; border:1px solid var(--line); border-radius:10px; background:#f8fafc; font-size:14px; user-select:none}
-.cat.active{outline:2px solid var(--accent); background:#ecfdf5}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:var(--bg);color:var(--text)}
+.app{min-height:100%;display:flex;flex-direction:column}
+.header{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 14px 6px;border-bottom:1px solid var(--line)}
+.header h2{margin:0;font-size:18px}
+.content{flex:1 1 auto;padding:12px 12px 80px;max-width:960px;width:100%;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+label{font-size:12px;color:var(--muted)}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff}
+textarea{min-height:64px;resize:vertical}
+.category{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+@media (max-width:560px){.category{grid-template-columns:repeat(2,1fr)}}
+.cat{padding:10px;text-align:center;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:14px;user-select:none}
+.cat.active{outline:2px solid var(--accent);background:#ecfdf5}
 .cat.custom{position:relative}
-.cat.custom .delhint{position:absolute; inset:auto 6px 6px auto; font-size:10px; color:#ef4444; display:none}
+.cat.custom .delhint{position:absolute;inset:auto 6px 6px auto;font-size:10px;color:#ef4444;display:none}
 .cat.custom.hold .delhint{display:block}
-.addcat{display:flex; gap:6px; margin-top:8px}
+.addcat{display:flex;gap:6px;margin-top:8px}
 .addcat input{flex:1}
 .addcat button{white-space:nowrap}
-
-.actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
-button{padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:#111827; color:#fff; font-weight:700; font-size:15px}
-button.secondary{background:#fff; color:#111827}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#111827;color:#fff;font-weight:700;font-size:15px}
+button.secondary{background:#fff;color:#111827}
 button.blue{background:var(--accent2)}
 button.green{background:var(--accent)}
 button.red{background:var(--danger)}
-.toolbar{display:flex; gap:8px; flex-wrap:wrap}
-
-.pill{display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700}
-.pill.income{background:#ecfdf5; color:#065f46}
-.pill.expense{background:#fef2f2; color:#991b1b}
-table{width:100%; border-collapse:collapse; font-size:14px}
-th, td{border-bottom:1px solid var(--line); padding:10px 6px; vertical-align:top}
-th{background:#f9fafb; text-align:left}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.pill.income{background:#ecfdf5;color:#065f46}
+.pill.expense{background:#fef2f2;color:#991b1b}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:10px 6px;vertical-align:top}
+th{background:#f9fafb;text-align:left}
 .right{text-align:right}
-.sum{font-weight:700}
-
 .hidden{display:none}
-
-/* Calendar */
-.calendar{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
-.cal-head{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin:6px 0; color:var(--muted); font-weight:700; text-align:center}
-.day{background:#fff;border:1px solid var(--line); border-radius:10px; min-height:84px; padding:6px; display:flex; flex-direction:column; gap:6px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:6px 0;color:var(--muted);font-weight:700;text-align:center}
+.day{background:#fff;border:1px solid var(--line);border-radius:10px;min-height:84px;padding:6px;display:flex;flex-direction:column;gap:6px}
 .day.other{opacity:.45}
-.day h4{margin:0; font-size:13px}
+.day h4{margin:0;font-size:13px}
 .dmoney{font-size:12px}
-.dmoney .inc{color:#2563eb; display:block}
-.dmoney .exp{color:#dc2626; display:block}
+.dmoney .inc{color:#2563eb;display:block}
+.dmoney .exp{color:#dc2626;display:block}
 .day:active{outline:2px solid #93c5fd}
-.kpi{display:flex; gap:10px; margin:8px 0 2px; flex-wrap:wrap}
-.k{background:#fff;border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-width:150px}
-.k .label{font-size:12px; color:#6b7280}
+.kpi{display:flex;gap:10px;margin:8px 0 2px;flex-wrap:wrap}
+.k{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:150px}
+.k .label{font-size:12px;color:#6b7280}
 .k .val{font-weight:900}
-
-/* Reports */
-.report-top{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-.switch{display:inline-flex; background:#eef2ff; border:1px solid var(--line); border-radius:999px; overflow:hidden}
-.switch button{background:transparent; color:#111827; border:0; padding:8px 12px; font-weight:700}
-.switch button.active{background:var(--accent2); color:#fff}
+.report-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.switch{display:inline-flex;background:#eef2ff;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.switch button{background:transparent;color:#111827;border:0;padding:8px 12px;font-weight:700}
+.switch button.active{background:var(--accent2);color:#fff}
 .legend{margin-top:8px}
-.legend-item{display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line)}
-.lbox{width:14px; height:14px; border-radius:3px; display:inline-block}
-
-/* Bottom Tab bar */
-.tabbar{position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line); height:64px; display:grid; grid-template-columns:repeat(3,1fr); z-index:10}
-.tabi{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:12px; color:#6b7280; font-weight:700}
+.legend-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.lbox{width:14px;height:14px;border-radius:3px;display:inline-block}
+.tabbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);height:64px;display:grid;grid-template-columns:repeat(3,1fr);z-index:10}
+.tabi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#6b7280;font-weight:700}
 .tabi.active{color:#2563eb}
-.icon{font-size:18px; line-height:18px}
-
-@media (max-width:420px){
-  th.col-del, td.col-del{ display:none; }
-  .header h2{font-size:17px}
-}
+.icon{font-size:18px;line-height:18px}
+@media (max-width:420px){th.col-del,td.col-del{display:none}.header h2{font-size:17px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="header">
-    <h2>Ghi chép Thu/Chi</h2>
-  </div>
-
+  <div class="header"><h2>Ghi chép Thu/Chi</h2></div>
   <div class="content">
 
-    <!-- INPUT -->
     <section id="page-input">
       <div class="card">
-        <div class="toolbar" style="justify-content:space-between; align-items:center">
+        <div class="toolbar" style="justify-content:space-between;align-items:center">
           <div class="switch" role="tablist" aria-label="Chọn loại ghi chép">
             <button id="btnIncome" class="active" aria-selected="true">Tiền thu</button>
             <button id="btnExpense" aria-selected="false">Tiền chi</button>
@@ -115,18 +94,9 @@ th{background:#f9fafb; text-align:left}
         </div>
 
         <div class="grid" style="margin-top:8px">
-          <div>
-            <label>Ngày</label>
-            <input type="date" id="dateInput">
-          </div>
-          <div>
-            <label>Số tiền (đ)</label>
-            <input type="number" id="amountInput" min="0" step="1000" placeholder="0">
-          </div>
-          <div>
-            <label>Ghi chú</label>
-            <textarea id="noteInput" placeholder="Nhập ghi chú..."></textarea>
-          </div>
+          <div><label>Ngày</label><input type="date" id="dateInput"></div>
+          <div><label>Số tiền (đ)</label><input type="number" id="amountInput" min="0" step="1000" placeholder="0"></div>
+          <div><label>Ghi chú</label><textarea id="noteInput" placeholder="Nhập ghi chú..."></textarea></div>
           <div>
             <label>Danh mục</label>
             <div class="category" id="categoryWrap"></div>
@@ -134,7 +104,7 @@ th{background:#f9fafb; text-align:left}
               <input id="newCategory" type="text" placeholder="Thêm danh mục mới (vd: Linh kiện iPhone)">
               <button class="secondary" id="addCatBtn">➕ Thêm</button>
             </div>
-            <div class="muted" style="font-size:12px; margin-top:6px">Mẹo: Nhấn & giữ vào danh mục tự tạo để xoá.</div>
+            <div class="muted" style="font-size:12px;margin-top:6px">Mẹo: Nhấn & giữ vào danh mục tự tạo để xoá.</div>
           </div>
         </div>
 
@@ -145,28 +115,34 @@ th{background:#f9fafb; text-align:left}
       </div>
 
       <div class="card" style="margin-top:10px">
+        <h3 style="margin:0 0 8px">Tìm kiếm</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr 1fr 1fr">
+          <div><label>Từ khoá</label><input id="qText" placeholder="Ghi chú, danh mục, số tiền..."></div>
+          <div><label>Loại</label><select id="qType"><option value="">Tất cả</option><option value="income">Thu</option><option value="expense">Chi</option></select></div>
+          <div><label>Từ ngày</label><input type="date" id="qFrom"></div>
+          <div><label>Đến ngày</label><input type="date" id="qTo"></div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 160px 160px;margin-top:8px">
+          <div><label>Danh mục</label><select id="qCategory"><option value="">Tất cả</option></select></div>
+          <div><button class="secondary" id="clearFilterBtn" style="width:100%">Xoá bộ lọc</button></div>
+          <div><button class="blue" id="applyFilterBtn" style="width:100%">Áp dụng</button></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:10px">
         <div class="kpi" id="kpiTop"></div>
+        <div style="font-size:12px;color:#6b7280;margin-bottom:6px" id="searchInfo"></div>
         <table id="dataTable" aria-label="Danh sách thu chi">
-          <thead>
-            <tr>
-              <th>Loại</th>
-              <th>Ngày</th>
-              <th>Danh mục</th>
-              <th>Ghi chú</th>
-              <th class="right">Số tiền</th>
-              <th class="col-del"></th>
-            </tr>
-          </thead>
+          <thead><tr><th>Loại</th><th>Ngày</th><th>Danh mục</th><th>Ghi chú</th><th class="right">Số tiền</th><th class="col-del"></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
     </section>
 
-    <!-- CALENDAR -->
     <section id="page-calendar" class="hidden">
       <div class="card">
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:space-between">
-          <div style="display:flex; gap:6px; align-items:center">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+          <div style="display:flex;gap:6px;align-items:center">
             <button class="secondary" id="prevMonth">&larr;</button>
             <div><strong id="calTitle">10/2025</strong> <span class="muted" id="calRange">(01–31)</span></div>
             <button class="secondary" id="nextMonth">&rarr;</button>
@@ -181,7 +157,6 @@ th{background:#f9fafb; text-align:left}
         <div class="cal-head"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div></div>
         <div class="calendar" id="calendarGrid"></div>
       </div>
-
       <div class="card" id="dayDetail" style="margin-top:10px">
         <h3 style="margin:0 0 6px">Chi tiết ngày <span id="detailDate" class="muted"></span></h3>
         <table>
@@ -191,43 +166,28 @@ th{background:#f9fafb; text-align:left}
       </div>
     </section>
 
-    <!-- REPORTS -->
     <section id="page-report" class="hidden">
       <div class="card">
         <div class="report-top">
-          <div class="switch">
-            <button id="btnMonthly" class="active">Hàng tháng</button>
-            <button id="btnYearly">Hàng năm</button>
-          </div>
+          <div class="switch"><button id="btnMonthly" class="active">Hàng tháng</button><button id="btnYearly">Hàng năm</button></div>
           <input type="month" id="reportMonth">
           <input type="number" id="reportYear" min="1970" style="width:110px" placeholder="Năm">
-          <div class="switch">
-            <button id="btnRepExpense" class="active">Chi tiêu</button>
-            <button id="btnRepIncome">Thu nhập</button>
-          </div>
+          <div class="switch"><button id="btnRepExpense" class="active">Chi tiêu</button><button id="btnRepIncome">Thu nhập</button></div>
         </div>
-
         <div class="kpi">
           <div class="k"><div class="label">Tổng Thu</div><div class="val" id="rIncome">0</div></div>
           <div class="k"><div class="label">Tổng Chi</div><div class="val" id="rExpense">0</div></div>
           <div class="k"><div class="label">Chênh lệch</div><div class="val" id="rNet">0</div></div>
         </div>
-
-        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; align-items:flex-start">
-          <canvas id="donut" width="260" height="260" style="background:#fff; border:1px solid var(--line); border-radius:10px"></canvas>
-          <div style="flex:1; min-width:220px">
-            <h3 style="margin:0 0 6px">Chi tiết theo danh mục</h3>
-            <div class="legend" id="legend"></div>
-          </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;align-items:flex-start">
+          <canvas id="donut" width="260" height="260" style="background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
+          <div style="flex:1;min-width:220px"><h3 style="margin:0 0 6px">Chi tiết theo danh mục</h3><div class="legend" id="legend"></div></div>
         </div>
       </div>
-
       <div class="card" style="margin-top:10px">
         <h3 style="margin:0 0 6px" id="sumTitle">Tổng theo ngày</h3>
         <table>
-          <thead>
-            <tr><th>Kỳ</th><th class="right">Thu</th><th class="right">Chi</th><th class="right">Chênh lệch</th></tr>
-          </thead>
+          <thead><tr><th>Kỳ</th><th class="right">Thu</th><th class="right">Chi</th><th class="right">Chênh lệch</th></tr></thead>
           <tbody id="periodBody"></tbody>
         </table>
       </div>
@@ -243,267 +203,133 @@ th{background:#f9fafb; text-align:left}
 </div>
 
 <script>
-// ===== Storage & helpers =====
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-const DEF_INCOME = ["Tiền làm","Tiền lương","Tiền phụ cấp","Tiền thưởng","Thu nhập phụ","Đầu tư","Thu nhập tạm thời"];
-const DEF_EXPENSE = ["Ăn uống","Chi tiêu hàng ngày","Linh kiện","Y tế","Tiền nhà","Ngân hàng","Giải trí","Khác"];
-let currentType = "income";
-let currentCategory = DEF_INCOME[0];
-
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const DEF_INCOME=["Tiền làm","Tiền lương","Tiền phụ cấp","Tiền thưởng","Thu nhập phụ","Đầu tư","Thu nhập tạm thời"];
+const DEF_EXPENSE=["Ăn uống","Chi tiêu hàng ngày","Linh kiện","Y tế","Tiền nhà","Ngân hàng","Giải trí","Khác"];
+let currentType="income", currentCategory=DEF_INCOME[0];
 function todayStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());}
 function money(n){return Number(n||0).toLocaleString('vi-VN')+'đ';}
-function rows(){ try{return JSON.parse(localStorage.getItem('s11_ledger')||'[]');}catch(e){return [];} }
-function save(r){ localStorage.setItem('s11_ledger', JSON.stringify(r)); }
+function rows(){try{return JSON.parse(localStorage.getItem('s11_ledger')||'[]')}catch(e){return []}}
+function save(r){localStorage.setItem('s11_ledger',JSON.stringify(r))}
+function loadCustom(type){const k=type==='income'?'custom_categories_income':'custom_categories_expense';try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}}
+function saveCustom(type,arr){const k=type==='income'?'custom_categories_income':'custom_categories_expense';localStorage.setItem(k,JSON.stringify(arr))}
 
-// ----- Custom Category store -----
-function loadCustom(type){
-  const key = type==='income' ? 'custom_categories_income' : 'custom_categories_expense';
-  try{ return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; }
-}
-function saveCustom(type, arr){
-  const key = type==='income' ? 'custom_categories_income' : 'custom_categories_expense';
-  localStorage.setItem(key, JSON.stringify(arr));
-}
+function setPage(p){$$('.tabi').forEach(t=>t.classList.toggle('active',t.dataset.page===p));
+  $('#page-input').classList.toggle('hidden',p!=='input');
+  $('#page-calendar').classList.toggle('hidden',p!=='calendar');
+  $('#page-report').classList.toggle('hidden',p!=='report');
+  if(p==='calendar') renderCalendar(); if(p==='report') renderReport();}
+$$('.tabi').forEach(t=>t.onclick=()=>setPage(t.dataset.page));
 
-// ===== Navigation (bottom tabs) =====
-function setPage(page){
-  $$('.tabi').forEach(t=>t.classList.toggle('active', t.dataset.page===page));
-  $('#page-input').classList.toggle('hidden', page!=='input');
-  $('#page-calendar').classList.toggle('hidden', page!=='calendar');
-  $('#page-report').classList.toggle('hidden', page!=='report');
-  if(page==='calendar') renderCalendar();
-  if(page==='report') renderReport();
-}
-$$('.tabi').forEach(t=> t.onclick=()=> setPage(t.dataset.page));
-
-// ===== Input =====
-function fullCategories(type){
-  return (type==='income' ? DEF_INCOME : DEF_EXPENSE).concat(loadCustom(type));
-}
-function renderCats(){
-  const list = fullCategories(currentType);
-  const wrap = $('#categoryWrap'); wrap.innerHTML='';
-  list.forEach((name,i)=>{
-    const isCustom = (i >= (currentType==='income' ? DEF_INCOME.length : DEF_EXPENSE.length));
-    const div=document.createElement('div'); div.className='cat'+(i===0?' active':'')+(isCustom?' custom':'');
-    div.textContent=name;
-    if(i===0) currentCategory=name;
-    div.onclick=()=>{ $$('.cat').forEach(c=>c.classList.remove('active')); div.classList.add('active'); currentCategory=name; };
-    if(isCustom){
-      const hint=document.createElement('span'); hint.className='delhint'; hint.textContent='Xoá'; div.appendChild(hint);
-      let timer=null;
-      const start=()=>{ div.classList.add('hold'); timer=setTimeout(()=>{
-        if(confirm('Xoá danh mục "'+name+'"?')){
-          const arr=loadCustom(currentType).filter(x=>x!==name); saveCustom(currentType, arr); renderCats();
-        } div.classList.remove('hold');
-      }, 700);};
-      const cancel=()=>{ if(timer){ clearTimeout(timer); timer=null; } div.classList.remove('hold'); };
-      div.addEventListener('touchstart', start); div.addEventListener('mousedown', start);
-      div.addEventListener('touchend', cancel); div.addEventListener('touchmove', cancel);
-      div.addEventListener('mouseleave', cancel); div.addEventListener('mouseup', cancel);
-    }
-    wrap.appendChild(div);
-  });
-}
-function addCustomCategory(){
-  const input=$('#newCategory'); const name=input.value.trim();
-  if(!name){ alert('Nhập tên danh mục'); return; }
-  const base=currentType==='income'?DEF_INCOME:DEF_EXPENSE;
-  if(base.includes(name) || loadCustom(currentType).includes(name)){ alert('Danh mục đã tồn tại'); return; }
-  const arr=loadCustom(currentType); arr.push(name); saveCustom(currentType, arr); input.value=''; renderCats();
-}
+function allCategories(){return Array.from(new Set(DEF_INCOME.concat(DEF_EXPENSE,loadCustom('income'),loadCustom('expense'))))}
+function fullCategories(type){return (type==='income'?DEF_INCOME:DEF_EXPENSE).concat(loadCustom(type))}
+function renderCats(){const list=fullCategories(currentType),wrap=$('#categoryWrap');wrap.innerHTML='';
+  list.forEach((name,i)=>{const isCustom=i>=(currentType==='income'?DEF_INCOME.length:DEF_EXPENSE.length);
+    const div=document.createElement('div');div.className='cat'+(i===0?' active':'')+(isCustom?' custom':'');
+    div.textContent=name;if(i===0)currentCategory=name;
+    div.onclick=()=>{$$('.cat').forEach(c=>c.classList.remove('active'));div.classList.add('active');currentCategory=name};
+    if(isCustom){const hint=document.createElement('span');hint.className='delhint';hint.textContent='Xoá';div.appendChild(hint);
+      let timer=null;const start=()=>{div.classList.add('hold');timer=setTimeout(()=>{if(confirm('Xoá danh mục "'+name+'"?')){const arr=loadCustom(currentType).filter(x=>x!==name);saveCustom(currentType,arr);renderCats();updateCategoryFilter()}div.classList.remove('hold')},700)};
+      const cancel=()=>{if(timer){clearTimeout(timer);timer=null}div.classList.remove('hold')};
+      div.addEventListener('touchstart',start);div.addEventListener('mousedown',start);
+      div.addEventListener('touchend',cancel);div.addEventListener('touchmove',cancel);
+      div.addEventListener('mouseleave',cancel);div.addEventListener('mouseup',cancel);}
+    wrap.appendChild(div);});}
+function addCustomCategory(){const input=$('#newCategory'),name=input.value.trim();if(!name){alert('Nhập tên danh mục');return}
+  if(allCategories().includes(name)){alert('Danh mục đã tồn tại');return}
+  const arr=loadCustom(currentType);arr.push(name);saveCustom(currentType,arr);input.value='';renderCats();updateCategoryFilter()}
 $('#addCatBtn').onclick=addCustomCategory;
 
-function refreshKPITop(){
-  const rs=rows(); let inc=0,exp=0;
-  rs.forEach(r=>{ if(r.type==='income') inc+=Number(r.amount||0); else exp+=Number(r.amount||0); });
-  const net=inc-exp;
-  $('#kpiTop').innerHTML = `
-    <div class="k"><div class="label">Tổng Thu</div><div class="val" style="color:#2563eb">${money(inc)}</div></div>
-    <div class="k"><div class="label">Tổng Chi</div><div class="val" style="color:#dc2626">${money(exp)}</div></div>
-    <div class="k"><div class="label">Chênh lệch</div><div class="val" style="color:${net>=0?'#059669':'#dc2626'}">${net>=0?'+':'-'}${money(Math.abs(net))}</div></div>`;
-}
-function renderTable(){
-  const tbody = $('#dataTable tbody'); tbody.innerHTML='';
-  rows().slice().reverse().forEach(r=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td>
-      <td>${r.date}</td><td>${r.category||''}</td><td>${r.note||''}</td>
-      <td class="right">${money(r.amount)}</td>
-      <td class="right col-del"><button class="secondary" data-del="${r.id}">Xoá</button></td>`;
-    tbody.appendChild(tr);
-  });
-  $$('button[data-del]').forEach(b=> b.onclick=()=>{ const id=b.getAttribute('data-del'); const all=rows().filter(x=>String(x.id)!==String(id)); save(all); renderTable(); refreshKPITop(); });
-  refreshKPITop();
-}
-function addRow(){
-  const date=$('#dateInput').value, amount=Number($('#amountInput').value||0), note=$('#noteInput').value.trim();
-  if(!date){alert('Chọn ngày'); return;} if(amount<=0){alert('Số tiền > 0'); return;}
-  const r=rows(); r.push({id:Date.now(), type:currentType, date, category:currentCategory, amount, note}); save(r);
-  $('#amountInput').value=''; $('#noteInput').value=''; renderTable();
-}
-$('#btnIncome').onclick=()=>{ currentType='income'; $('#btnIncome').classList.add('active'); $('#btnExpense').classList.remove('active'); renderCats(); };
-$('#btnExpense').onclick=()=>{ currentType='expense'; $('#btnExpense').classList.add('active'); $('#btnIncome').classList.remove('active'); renderCats(); };
-$('#submitBtn').onclick=addRow;
-$('#resetBtn').onclick=()=>{ $('#amountInput').value=''; $('#noteInput').value=''; };
-$('#clearAllBtn').onclick=()=>{ if(confirm('Xoá toàn bộ?')){ save([]); renderTable(); } };
+function updateCategoryFilter(){const sel=$('#qCategory'),cur=sel.value;sel.innerHTML='<option value="">Tất cả</option>'+allCategories().map(c=>`<option>${c}</option>`).join('');if(cur)sel.value=cur}
+function getFilteredRows(){const q=($('#qText').value||'').trim().toLowerCase(),type=$('#qType').value,cat=$('#qCategory').value,from=$('#qFrom').value,to=$('#qTo').value;
+  return rows().filter(r=>{if(type&&r.type!==type)return false;if(cat&&r.category!==cat)return false;if(from&&r.date<from)return false;if(to&&r.date>to)return false;
+    if(q){const s=(r.note||'')+' '+(r.category||'')+' '+(r.type)+' '+(r.amount||'')+' '+(r.date||'');if(s.toLowerCase().indexOf(q)===-1)return false;}return true})}
+function renderSearchInfo(list){const n=list.length;let inc=0,exp=0;list.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});
+  const net=inc-exp;$('#searchInfo').textContent=`Kết quả: ${n} dòng · Thu: ${inc.toLocaleString('vi-VN')}đ · Chi: ${exp.toLocaleString('vi-VN')}đ · Chênh lệch: ${(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')}đ`}
+function renderTable(){const list=getFilteredRows().slice().reverse(),tbody=$('#dataTable tbody');tbody.innerHTML='';
+  list.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td>
+    <td>${r.date}</td><td>${r.category||''}</td><td>${r.note||''}</td><td class="right">${money(r.amount)}</td><td class="right col-del"><button class="secondary" data-del="${r.id}">Xoá</button></td>`;tbody.appendChild(tr)});
+  $$('button[data-del]').forEach(b=>b.onclick=()=>{const id=b.getAttribute('data-del');const all=rows().filter(x=>String(x.id)!==String(id));save(all);renderTable();refreshKPITop()});
+  refreshKPITop();renderSearchInfo(list)}
+$('#applyFilterBtn').onclick=renderTable;
+$('#clearFilterBtn').onclick=()=>{$('#qText').value='';$('#qType').value='';$('#qCategory').value='';$('#qFrom').value='';$('#qTo').value='';renderTable()};
+$('#qText').addEventListener('input',()=>{renderTable()});
 
-// CSV
-function toCSV(rs){ const headers=['type','date','category','amount','note']; const esc=s=>s==null?'':(/[",\n]/.test(String(s))?'"'+String(s).replace(/"/g,'""')+'"':String(s)); const out=[headers.join(',')]; rs.forEach(r=> out.push(headers.map(h=>esc(r[h])).join(','))); return out.join('\n'); }
-function parseCSV(t){ const rows=[]; let cur=[],cell='',inQ=false; for(let i=0;i<t.length;i++){const ch=t[i]; if(inQ){ if(ch=='"'){ if(t[i+1]=='"'){cell+='"';i++;} else inQ=false;} else cell+=ch; } else { if(ch=='"')inQ=true; else if(ch==','){cur.push(cell);cell='';} else if(ch=='\n'||ch=='\r'){ if(ch=='\r'&&t[i+1]=='\n')i++; cur.push(cell);cell=''; if(cur.some(x=>x!=='')) rows.push(cur); cur=[];} else cell+=ch; } } if(cell.length||cur.length){cur.push(cell); rows.push(cur);} return rows;}
-$('#exportBtn').onclick=()=>{ const blob=new Blob([toCSV(rows())],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='so_thu_chi.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0); };
-$('#csvInput').addEventListener('change',e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ const arr=parseCSV(r.result||''); if(!arr.length) return alert('CSV rỗng'); const header=arr[0]; const need=['type','date','category','amount','note']; if(!need.every(h=>header.includes(h))) return alert('CSV sai header'); const idx=Object.fromEntries(header.map((h,i)=>[h,i])); const all=rows(); for(let i=1;i<arr.length;i++){ const x=arr[i]; if(!x||!x.length) continue; const row={id:Date.now()+i, type:(x[idx.type]||'income').trim(), date:(x[idx.date]||todayStr()).trim(), category:x[idx.category]||'', amount:Number(x[idx.amount]||0), note:x[idx.note]||''}; if(!row.amount||!row.date) continue; all.push(row);} save(all); renderTable(); alert('Nhập CSV xong'); }; r.readAsText(f,'utf-8'); e.target.value=''; });
-$('#importBtn').onclick=()=> $('#csvInput').click();
+function refreshKPITop(){const rs=getFilteredRows();let inc=0,exp=0;rs.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});
+  const net=inc-exp;$('#kpiTop').innerHTML=`<div class="k"><div class="label">Tổng Thu (lọc)</div><div class="val" style="color:#2563eb">${money(inc)}</div></div>
+  <div class="k"><div class="label">Tổng Chi (lọc)</div><div class="val" style="color:#dc2626">${money(exp)}</div></div>
+  <div class="k"><div class="label">Chênh lệch</div><div class="val" style="color:${net>=0?'#059669':'#dc2626'}">${net>=0?'+':'-'}${Math.abs(net).toLocaleString('vi-VN')}đ</div></div>`}
 
-// ===== Calendar =====
+function addRow(){const date=$('#dateInput').value,amount=Number($('#amountInput').value||0),note=$('#noteInput').value.trim();
+  if(!date){alert('Chọn ngày');return}if(amount<=0){alert('Số tiền > 0');return}
+  const r=rows();r.push({id:Date.now(),type:currentType,date,category:currentCategory,amount,note});save(r);
+  $('#amountInput').value='';$('#noteInput').value='';renderTable();updateCategoryFilter()}
+$('#btnIncome').onclick=()=>{currentType='income';$('#btnIncome').classList.add('active');$('#btnExpense').classList.remove('active');renderCats()};
+$('#btnExpense').onclick=()=>{currentType='expense';$('#btnExpense').classList.add('active');$('#btnIncome').classList.remove('active');renderCats()};
+$('#submitBtn').onclick=addRow;$('#resetBtn').onclick=()=>{$('#amountInput').value='';$('#noteInput').value=''};
+$('#clearAllBtn').onclick=()=>{if(confirm('Xoá toàn bộ?')){save([]);renderTable()}};
+
+function toCSV(rs){const headers=['type','date','category','amount','note'];const esc=s=>s==null?'':(/[",\n]/.test(String(s))? '"'+String(s).replace(/"/g,'""')+'"':String(s));const out=[headers.join(',')];rs.forEach(r=>out.push(headers.map(h=>esc(r[h])).join(',')));return out.join('\n')}
+function parseCSV(t){const rows=[];let cur=[],cell='',inQ=false;for(let i=0;i<t.length;i++){const ch=t[i];if(inQ){if(ch=='"'){if(t[i+1]=='"'){cell+='"';i++;}else inQ=false;}else cell+=ch;}else{if(ch=='"')inQ=true;else if(ch==','){cur.push(cell);cell='';}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;cur.push(cell);cell='';if(cur.some(x=>x!==''))rows.push(cur);cur=[];}else cell+=ch;}}if(cell.length||cur.length){cur.push(cell);rows.push(cur);}return rows}
+$('#exportBtn').onclick=()=>{const blob=new Blob([toCSV(rows())],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='so_thu_chi.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},0)};
+$('#csvInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const arr=parseCSV(r.result||'');if(!arr.length)return alert('CSV rỗng');const header=arr[0];const need=['type','date','category','amount','note'];if(!need.every(h=>header.includes(h)))return alert('CSV sai header');const idx=Object.fromEntries(header.map((h,i)=>[h,i]));const all=rows();for(let i=1;i<arr.length;i++){const x=arr[i];if(!x||!x.length)continue;const row={id:Date.now()+i,type:(x[idx.type]||'income').trim(),date:(x[idx.date]||todayStr()).trim(),category:x[idx.category]||'',amount:Number(x[idx.amount]||0),note:x[idx.note]||''};if(!row.amount||!row.date)continue;all.push(row)}save(all);renderTable();alert('Nhập CSV xong')};r.readAsText(f,'utf-8');e.target.value=''});
+$('#importBtn').onclick=()=>$('#csvInput').click();
+
 let calYear,calMonth;
-function setMonth(y,m){ calYear=y; calMonth=m; $('#monthPicker').value=y+'-'+String(m+1).padStart(2,'0'); renderCalendar(); }
-function monthInfo(y,m){ const first=new Date(y,m,1); const last=new Date(y,m+1,0); return {days:last.getDate(), firstDOW:(first.getDay()+6)%7}; }
-function renderCalendar(){
-  const {days, firstDOW}=monthInfo(calYear, calMonth);
-  $('#calTitle').textContent=String(calMonth+1).padStart(2,'0')+'/'+calYear;
-  $('#calRange').textContent='(01–'+String(days).padStart(2,'0')+')';
-  const grid=$('#calendarGrid'); grid.innerHTML='';
-  const rs=rows();
-  const prevDays = new Date(calYear, calMonth, 0).getDate();
-  const totalCells=42; let day=1, next=1;
-  const fmt=(y,m,d)=> y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-  for(let i=0;i<totalCells;i++){
-    const cell=document.createElement('div'); cell.className='day';
-    let shown, inMonth=true, dnum;
-    if(i<firstDOW){ inMonth=false; const pm=calMonth-1<0?11:calMonth-1; const py=calMonth-1<0?calYear-1:calYear; dnum=prevDays-firstDOW+i+1; shown=fmt(py,pm,dnum); }
-    else if(day<=days){ dnum=day++; shown=fmt(calYear,calMonth,dnum); }
-    else { inMonth=false; const nm=(calMonth+1)%12; const ny=calMonth+1>11?calYear+1:calYear; dnum=next++; shown=fmt(ny,nm,dnum); }
-    if(!inMonth) cell.classList.add('other');
-    let inc=0,exp=0; rs.forEach(r=>{ if(r.date===shown){ if(r.type==='income') inc+=Number(r.amount||0); else exp+=Number(r.amount||0); } });
-    cell.innerHTML=`<h4>${dnum}</h4><div class="dmoney"><span class="inc">${inc?money(inc):''}</span><span class="exp">${exp?money(exp):''}</span></div>`;
-    cell.onclick=()=>showDayDetail(shown);
-    grid.appendChild(cell);
-  }
-  // month totals
-  let mInc=0, mExp=0;
-  rs.forEach(r=>{ const [y,m]=r.date.split('-').map(Number); if(y===calYear && m===calMonth+1){ if(r.type==='income') mInc+=Number(r.amount||0); else mExp+=Number(r.amount||0);} });
-  $('#mIncome').textContent='+'+money(mInc);
-  $('#mExpense').textContent='-'+money(mExp);
-  const net=mInc-mExp; $('#mNet').textContent=(net>=0?'+':'-')+money(Math.abs(net));
-}
-function showDayDetail(dateStr){
-  $('#detailDate').textContent=dateStr;
-  const body=$('#detailBody'); body.innerHTML='';
-  rows().filter(r=>r.date===dateStr).forEach(r=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td>
-      <td>${r.category||''}</td><td>${r.note||''}</td><td class="right">${money(r.amount)}</td>`;
-    body.appendChild(tr);
-  });
-}
-$('#prevMonth').onclick=()=>{ const m=calMonth-1; if(m<0){ calMonth=11; calYear--; } else calMonth=m; renderCalendar(); };
-$('#nextMonth').onclick=()=>{ const m=calMonth+1; if(m>11){ calMonth=0; calYear++; } else calMonth=m; renderCalendar(); };
-$('#monthPicker').addEventListener('change', e=>{ const [y,m]=e.target.value.split('-'); setMonth(Number(y), Number(m)-1); });
+function setMonth(y,m){calYear=y;calMonth=m;$('#monthPicker').value=y+'-'+String(m+1).padStart(2,'0');renderCalendar()}
+function monthInfo(y,m){const first=new Date(y,m,1);const last=new Date(y,m+1,0);return {days:last.getDate(),firstDOW:(first.getDay()+6)%7}}
+function renderCalendar(){const {days,firstDOW}=monthInfo(calYear,calMonth);$('#calTitle').textContent=String(calMonth+1).padStart(2,'0')+'/'+calYear;$('#calRange').textContent='(01–'+String(days).padStart(2,'0')+')';
+  const grid=$('#calendarGrid');grid.innerHTML='';const rs=rows();const prevDays=new Date(calYear,calMonth,0).getDate();const totalCells=42;let day=1,next=1;const fmt=(y,m,d)=> y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  for(let i=0;i<totalCells;i++){const cell=document.createElement('div');cell.className='day';let shown,inMonth=true,dnum;
+    if(i<firstDOW){inMonth=false;const pm=calMonth-1<0?11:calMonth-1;const py=calMonth-1<0?calYear-1:calYear;dnum=prevDays-firstDOW+i+1;shown=fmt(py,pm,dnum)}
+    else if(day<=days){dnum=day++;shown=fmt(calYear,calMonth,dnum)}
+    else {inMonth=false;const nm=(calMonth+1)%12;const ny=calMonth+1>11?calYear+1:calYear;dnum=next++;shown=fmt(ny,nm,dnum)}
+    if(!inMonth)cell.classList.add('other');let inc=0,exp=0;rs.forEach(r=>{if(r.date===shown){if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)}});
+    cell.innerHTML=`<h4>${dnum}</h4><div class="dmoney"><span class="inc">${inc?inc.toLocaleString('vi-VN'):''}</span><span class="exp">${exp?exp.toLocaleString('vi-VN'):''}</span></div>`;
+    cell.onclick=()=>showDayDetail(shown);grid.appendChild(cell)}
+  let mInc=0,mExp=0;rs.forEach(r=>{const [y,m]=r.date.split('-').map(Number);if(y===calYear&&m===calMonth+1){if(r.type==='income')mInc+=Number(r.amount||0);else mExp+=Number(r.amount||0)}});
+  $('#mIncome').textContent='+'+mInc.toLocaleString('vi-VN')+'đ';$('#mExpense').textContent='-'+mExp.toLocaleString('vi-VN')+'đ';const net=mInc-mExp;$('#mNet').textContent=(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'}
+function showDayDetail(dateStr){$('#detailDate').textContent=dateStr;const body=$('#detailBody');body.innerHTML='';rows().filter(r=>r.date===dateStr).forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td><td>${r.category||''}</td><td>${r.note||''}</td><td class="right">${money(r.amount)}</td>`;body.appendChild(tr)})}
+$('#prevMonth').onclick=()=>{const m=calMonth-1;if(m<0){calMonth=11;calYear--}else calMonth=m;renderCalendar()};
+$('#nextMonth').onclick=()=>{const m=calMonth+1;if(m>11){calMonth=0;calYear++}else calMonth=m;renderCalendar()};
+$('#monthPicker').addEventListener('change',e=>{const [y,m]=e.target.value.split('-');setMonth(Number(y),Number(m)-1)});
 
-// ===== Reports =====
-let repMode='monthly', repType='expense';
-function palette(i){ const P=['#60a5fa','#34d399','#fbbf24','#f87171','#a78bfa','#f472b6','#22d3ee','#fb923c','#4ade80','#c084fc']; return P[i%P.length]; }
-function drawDonut(values, labels){
-  const canvas=$('#donut'); const ctx=canvas.getContext('2d');
-  const w=Math.min(300, Math.max(220, canvas.parentElement.clientWidth-40));
-  canvas.width=w; canvas.height=w;
-  ctx.clearRect(0,0,w,w);
-  const cx=w/2, cy=w/2, r=w/2-14, r2=r*0.58;
-  const total=values.reduce((a,b)=>a+b,0)||1; let ang=-Math.PI/2;
-  values.forEach((v,i)=>{ const a=(v/total)*Math.PI*2; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,ang,ang+a); ctx.closePath(); ctx.fillStyle=palette(i); ctx.fill(); ang+=a; });
-  ctx.globalCompositeOperation='destination-out'; ctx.beginPath(); ctx.arc(cx,cy,r2,0,Math.PI*2); ctx.fill();
-  ctx.globalCompositeOperation='source-over'; ctx.fillStyle='#111827'; ctx.textAlign='center'; ctx.font='700 14px system-ui'; ctx.fillText('Tổng: '+(values.reduce((a,b)=>a+b,0)?(values.reduce((a,b)=>a+b,0)).toLocaleString('vi-VN')+'đ':'0đ'), cx, cy+6);
-}
-function renderReport(){
-  const all=rows();
-  let filtered=[], titlePeriod='';
-  if(repMode==='monthly'){
-    const [yy,mm]=$('#reportMonth').value.split('-'); const y=Number(yy), m=Number(mm);
-    filtered=all.filter(r=>{const [ry,rm]=r.date.split('-').map(Number); return ry===y && rm===m;});
-    titlePeriod='Tổng theo ngày ('+String(mm).padStart(2,'0')+'/'+y+')';
-    $('#sumTitle').textContent=titlePeriod;
-  } else {
-    const y=Number($('#reportYear').value||new Date().getFullYear());
-    filtered=all.filter(r=>Number(r.date.split('-')[0])===y);
-    titlePeriod='Tổng theo tháng ('+y+')';
-    $('#sumTitle').textContent=titlePeriod;
-  }
-  // Top totals
-  let inc=0,exp=0; filtered.forEach(r=>{ if(r.type==='income') inc+=Number(r.amount||0); else exp+=Number(r.amount||0); });
-  const net=inc-exp;
-  $('#rIncome').textContent=money(inc);
-  $('#rExpense').textContent=money(exp);
-  $('#rNet').textContent=(net>=0?'+':'-')+money(Math.abs(net));
+let repMode='monthly',repType='expense';
+function palette(i){const P=['#60a5fa','#34d399','#fbbf24','#f87171','#a78bfa','#f472b6','#22d3ee','#fb923c','#4ade80','#c084fc'];return P[i%P.length]}
+function drawDonut(values){const canvas=$('#donut'),ctx=canvas.getContext('2d');const w=Math.min(300,Math.max(220,canvas.parentElement.clientWidth-40));canvas.width=w;canvas.height=w;ctx.clearRect(0,0,w,w);
+  const cx=w/2,cy=w/2,r=w/2-14,r2=r*0.58;const total=values.reduce((a,b)=>a+b,0)||1;let ang=-Math.PI/2;
+  values.forEach((v,i)=>{const a=(v/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+a);ctx.closePath();ctx.fillStyle=palette(i);ctx.fill();ang+=a});
+  ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(cx,cy,r2,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation='source-over';
+  ctx.fillStyle='#111827';ctx.textAlign='center';ctx.font='700 14px system-ui';ctx.fillText('Tổng: '+(values.reduce((a,b)=>a+b,0)).toLocaleString('vi-VN')+'đ',cx,cy+6)}
+function renderReport(){const all=rows();let filtered=[],title='';if(repMode==='monthly'){const [yy,mm]=$('#reportMonth').value.split('-');const y=Number(yy),m=Number(mm);
+    filtered=all.filter(r=>{const [ry,rm]=r.date.split('-').map(Number);return ry===y&&rm===m});title='Tổng theo ngày ('+String(mm).padStart(2,'0')+'/'+y+')';$('#sumTitle').textContent=title}
+  else{const y=Number($('#reportYear').value||new Date().getFullYear());filtered=all.filter(r=>Number(r.date.split('-')[0])===y);title='Tổng theo tháng ('+y+')';$('#sumTitle').textContent=title}
+  let inc=0,exp=0;filtered.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});const net=inc-exp;
+  $('#rIncome').textContent=inc.toLocaleString('vi-VN')+'đ';$('#rExpense').textContent=exp.toLocaleString('vi-VN')+'đ';$('#rNet').textContent=(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ';
+  const list=filtered.filter(r=>r.type===repType);const map=new Map();list.forEach(r=>map.set(r.category,(map.get(r.category)||0)+Number(r.amount||0)));const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
+  const values=arr.map(x=>x[1]);drawDonut(values);const legend=$('#legend');legend.innerHTML='';const total=values.reduce((a,b)=>a+b,0);
+  if(!arr.length){legend.innerHTML='<div class="muted">Không có dữ liệu</div>'}else{arr.forEach((e,i)=>{const d=document.createElement('div');d.className='legend-item';const pct=total?(e[1]*100/total):0;
+      d.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><span class="lbox" style="background:${palette(i)}"></span><strong>${e[0]}</strong></div><div>${(e[1]).toLocaleString('vi-VN')}đ <span class="muted">(${pct.toFixed(1)}%)</span></div>`;legend.appendChild(d)})}
+  const tbody=$('#periodBody');tbody.innerHTML='';if(repMode==='monthly'){const [yy,mm]=$('#reportMonth').value.split('-');const y=Number(yy),m=Number(mm);const days=new Date(y,m,0).getDate();
+    for(let d=1;d<=days;d++){const key=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');let ti=0,te=0;filtered.forEach(r=>{if(r.date===key){if(r.type==='income')ti+=Number(r.amount||0);else te+=Number(r.amount||0)}});
+      if(ti||te){const tr=document.createElement('tr');const n=ti-te;tr.innerHTML=`<td>${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}</td>
+      <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
+      <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
+      <td class="right" style="color:${n>=0?'#059669':'#dc2626'}">${n?((n>=0?'+':'-')+Math.abs(n).toLocaleString('vi-VN')+'đ'):''}</td>`;tbody.appendChild(tr)}}}
+  else{const y=Number($('#reportYear').value||new Date().getFullYear());for(let m=1;m<=12;m++){let ti=0,te=0;filtered.forEach(r=>{const [ry,rm]=r.date.split('-').map(Number);if(rm===m){if(r.type==='income')ti+=Number(r.amount||0);else te+=Number(r.amount||0)}});
+      if(ti||te){const tr=document.createElement('tr');const n=ti-te;tr.innerHTML=`<td>Th ${m}</td>
+      <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
+      <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
+      <td class="right" style="color:${n>=0?'#059669':'#dc2626'}">${n?((n>=0?'+':'-')+Math.abs(n).toLocaleString('vi-VN')+'đ'):''}</td>`;tbody.appendChild(tr)}}}}
+$('#btnMonthly').onclick=()=>{repMode='monthly';$('#btnMonthly').classList.add('active');$('#btnYearly').classList.remove('active');$('#reportYear').style.display='none';$('#reportMonth').style.display='inline-block';renderReport()};
+$('#btnYearly').onclick=()=>{repMode='yearly';$('#btnYearly').classList.add('active');$('#btnMonthly').classList.remove('active');$('#reportMonth').style.display='none';$('#reportYear').style.display='inline-block';renderReport()};
+$('#btnRepExpense').onclick=()=>{repType='expense';$('#btnRepExpense').classList.add('active');$('#btnRepIncome').classList.remove('active');renderReport()};
+$('#btnRepIncome').onclick=()=>{repType='income';$('#btnRepIncome').classList.add('active');$('#btnRepExpense').classList.remove('active');renderReport()};
+$('#reportMonth').addEventListener('change',renderReport);$('#reportYear').addEventListener('change',renderReport);
 
-  // Donut by category for selected type
-  const list=filtered.filter(r=>r.type===repType);
-  const map=new Map(); list.forEach(r=> map.set(r.category,(map.get(r.category)||0)+Number(r.amount||0)));
-  const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
-  const labels=arr.map(x=>x[0]); const values=arr.map(x=>x[1]);
-  drawDonut(values, labels);
-  const legend=$('#legend'); legend.innerHTML='';
-  const total=values.reduce((a,b)=>a+b,0);
-  if(!arr.length){ legend.innerHTML='<div class="muted">Không có dữ liệu</div>'; } else {
-    arr.forEach((e,i)=>{
-      const d=document.createElement('div'); d.className='legend-item';
-      const pct= total? (e[1]*100/total):0;
-      d.innerHTML=`<div style="display:flex; align-items:center; gap:8px"><span class="lbox" style="background:${palette(i)}"></span><strong>${e[0]}</strong></div>
-        <div>${(e[1]).toLocaleString('vi-VN')}đ <span class="muted">(${pct.toFixed(1)}%)</span></div>`;
-      legend.appendChild(d);
-    });
-  }
-
-  // Period summary table (daily or monthly)
-  const tbody=$('#periodBody'); tbody.innerHTML='';
-  if(repMode==='monthly'){
-    const [yy,mm]=$('#reportMonth').value.split('-'); const y=Number(yy), m=Number(mm);
-    const days = new Date(y,m,0).getDate();
-    for(let d=1; d<=days; d++){
-      const key = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-      let ti=0, te=0;
-      filtered.forEach(r=>{ if(r.date===key){ if(r.type==='income') ti+=Number(r.amount||0); else te+=Number(r.amount||0); } });
-      if(ti || te){
-        const tr=document.createElement('tr');
-        const net=ti-te;
-        tr.innerHTML=`<td>${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}</td>
-          <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
-          <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
-          <td class="right" style="color:${net>=0?'#059669':'#dc2626'}">${net?((net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'):''}</td>`;
-        tbody.appendChild(tr);
-      }
-    }
-  } else {
-    const y=Number($('#reportYear').value||new Date().getFullYear());
-    for(let m=1;m<=12;m++){
-      let ti=0, te=0;
-      filtered.forEach(r=>{ const [ry,rm]=r.date.split('-').map(Number); if(rm===m){ if(r.type==='income') ti+=Number(r.amount||0); else te+=Number(r.amount||0);} });
-      if(ti || te){
-        const tr=document.createElement('tr'); const net=ti-te;
-        tr.innerHTML=`<td>Th ${m}</td>
-          <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
-          <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
-          <td class="right" style="color:${net>=0?'#059669':'#dc2626'}">${net?((net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'):''}</td>`;
-        tbody.appendChild(tr);
-      }
-    }
-  }
-}
-$('#btnMonthly').onclick=()=>{ repMode='monthly'; $('#btnMonthly').classList.add('active'); $('#btnYearly').classList.remove('active'); $('#reportYear').style.display='none'; $('#reportMonth').style.display='inline-block'; renderReport(); };
-$('#btnYearly').onclick=()=>{ repMode='yearly'; $('#btnYearly').classList.add('active'); $('#btnMonthly').classList.remove('active'); $('#reportMonth').style.display='none'; $('#reportYear').style.display='inline-block'; renderReport(); };
-$('#btnRepExpense').onclick=()=>{ repType='expense'; $('#btnRepExpense').classList.add('active'); $('#btnRepIncome').classList.remove('active'); renderReport(); };
-$('#btnRepIncome').onclick=()=>{ repType='income'; $('#btnRepIncome').classList.add('active'); $('#btnRepExpense').classList.remove('active'); renderReport(); };
-$('#reportMonth').addEventListener('change', renderReport);
-$('#reportYear').addEventListener('change', renderReport);
-
-// ===== Init =====
-$('#dateInput').value=todayStr();
-$('#reportMonth').value=todayStr().slice(0,7);
-$('#reportYear').value=new Date().getFullYear();
-renderCats(); renderTable();
-const d=new Date(); setMonth(d.getFullYear(), d.getMonth()); showDayDetail(todayStr());
-renderReport();
+function initFilters(){updateCategoryFilter();$('#qFrom').value='';$('#qTo').value='';$('#qType').value='';$('#qText').value=''}
+$('#dateInput').value=todayStr();$('#reportMonth').value=todayStr().slice(0,7);$('#reportYear').value=new Date().getFullYear();
+renderCats();initFilters();renderTable();const d=new Date();setMonth(d.getFullYear(),d.getMonth());showDayDetail(todayStr());renderReport();
 </script>
 </body>
 </html>
