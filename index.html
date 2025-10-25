@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Thu/Chi – Mobile PLUS (Category)</title>
+<title>Thu/Chi – Mobile PRO (Totals + Daily Summary)</title>
 <style>
 :root{
   --bg:#f7f9fb; --card:#ffffff; --text:#111827; --muted:#6b7280;
@@ -62,6 +62,10 @@ th{background:#f9fafb; text-align:left}
 .dmoney .inc{color:#2563eb; display:block}
 .dmoney .exp{color:#dc2626; display:block}
 .day:active{outline:2px solid #93c5fd}
+.kpi{display:flex; gap:10px; margin:8px 0 2px; flex-wrap:wrap}
+.k{background:#fff;border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-width:150px}
+.k .label{font-size:12px; color:#6b7280}
+.k .val{font-weight:900}
 
 /* Reports */
 .report-top{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
@@ -141,6 +145,7 @@ th{background:#f9fafb; text-align:left}
       </div>
 
       <div class="card" style="margin-top:10px">
+        <div class="kpi" id="kpiTop"></div>
         <table id="dataTable" aria-label="Danh sách thu chi">
           <thead>
             <tr>
@@ -168,7 +173,11 @@ th{background:#f9fafb; text-align:left}
           </div>
           <input type="month" id="monthPicker">
         </div>
-
+        <div class="kpi">
+          <div class="k"><div class="label">Thu nhập</div><div class="val" id="mIncome">0</div></div>
+          <div class="k"><div class="label">Chi tiêu</div><div class="val" id="mExpense">0</div></div>
+          <div class="k"><div class="label">Tổng</div><div class="val" id="mNet">0</div></div>
+        </div>
         <div class="cal-head"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div></div>
         <div class="calendar" id="calendarGrid"></div>
       </div>
@@ -198,13 +207,29 @@ th{background:#f9fafb; text-align:left}
           </div>
         </div>
 
+        <div class="kpi">
+          <div class="k"><div class="label">Tổng Thu</div><div class="val" id="rIncome">0</div></div>
+          <div class="k"><div class="label">Tổng Chi</div><div class="val" id="rExpense">0</div></div>
+          <div class="k"><div class="label">Chênh lệch</div><div class="val" id="rNet">0</div></div>
+        </div>
+
         <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; align-items:flex-start">
           <canvas id="donut" width="260" height="260" style="background:#fff; border:1px solid var(--line); border-radius:10px"></canvas>
           <div style="flex:1; min-width:220px">
-            <h3 style="margin:0 0 6px">Chi tiết</h3>
+            <h3 style="margin:0 0 6px">Chi tiết theo danh mục</h3>
             <div class="legend" id="legend"></div>
           </div>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:10px">
+        <h3 style="margin:0 0 6px" id="sumTitle">Tổng theo ngày</h3>
+        <table>
+          <thead>
+            <tr><th>Kỳ</th><th class="right">Thu</th><th class="right">Chi</th><th class="right">Chênh lệch</th></tr>
+          </thead>
+          <tbody id="periodBody"></tbody>
+        </table>
       </div>
     </section>
 
@@ -227,7 +252,7 @@ let currentType = "income";
 let currentCategory = DEF_INCOME[0];
 
 function todayStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());}
-function money(n){return Number(n||0).toLocaleString('vi-VN');}
+function money(n){return Number(n||0).toLocaleString('vi-VN')+'đ';}
 function rows(){ try{return JSON.parse(localStorage.getItem('s11_ledger')||'[]');}catch(e){return [];} }
 function save(r){ localStorage.setItem('s11_ledger', JSON.stringify(r)); }
 
@@ -264,41 +289,41 @@ function renderCats(){
     const div=document.createElement('div'); div.className='cat'+(i===0?' active':'')+(isCustom?' custom':'');
     div.textContent=name;
     if(i===0) currentCategory=name;
-    // click select
     div.onclick=()=>{ $$('.cat').forEach(c=>c.classList.remove('active')); div.classList.add('active'); currentCategory=name; };
-    // long-press to delete custom only
     if(isCustom){
       const hint=document.createElement('span'); hint.className='delhint'; hint.textContent='Xoá'; div.appendChild(hint);
       let timer=null;
       const start=()=>{ div.classList.add('hold'); timer=setTimeout(()=>{
         if(confirm('Xoá danh mục "'+name+'"?')){
-          const arr=loadCustom(currentType).filter(x=>x!==name); saveCustom(currentType, arr);
-          renderCats();
-        }
-        div.classList.remove('hold');
+          const arr=loadCustom(currentType).filter(x=>x!==name); saveCustom(currentType, arr); renderCats();
+        } div.classList.remove('hold');
       }, 700);};
       const cancel=()=>{ if(timer){ clearTimeout(timer); timer=null; } div.classList.remove('hold'); };
-      div.addEventListener('touchstart', start);
-      div.addEventListener('mousedown', start);
-      div.addEventListener('touchend', cancel);
-      div.addEventListener('touchmove', cancel);
-      div.addEventListener('mouseleave', cancel);
-      div.addEventListener('mouseup', cancel);
+      div.addEventListener('touchstart', start); div.addEventListener('mousedown', start);
+      div.addEventListener('touchend', cancel); div.addEventListener('touchmove', cancel);
+      div.addEventListener('mouseleave', cancel); div.addEventListener('mouseup', cancel);
     }
     wrap.appendChild(div);
   });
 }
 function addCustomCategory(){
-  const input=$('#newCategory');
-  const name=input.value.trim();
+  const input=$('#newCategory'); const name=input.value.trim();
   if(!name){ alert('Nhập tên danh mục'); return; }
-  const base = currentType==='income'? DEF_INCOME: DEF_EXPENSE;
+  const base=currentType==='income'?DEF_INCOME:DEF_EXPENSE;
   if(base.includes(name) || loadCustom(currentType).includes(name)){ alert('Danh mục đã tồn tại'); return; }
-  const arr = loadCustom(currentType); arr.push(name); saveCustom(currentType, arr);
-  input.value=''; renderCats();
+  const arr=loadCustom(currentType); arr.push(name); saveCustom(currentType, arr); input.value=''; renderCats();
 }
-$('#addCatBtn').onclick = addCustomCategory;
+$('#addCatBtn').onclick=addCustomCategory;
 
+function refreshKPITop(){
+  const rs=rows(); let inc=0,exp=0;
+  rs.forEach(r=>{ if(r.type==='income') inc+=Number(r.amount||0); else exp+=Number(r.amount||0); });
+  const net=inc-exp;
+  $('#kpiTop').innerHTML = `
+    <div class="k"><div class="label">Tổng Thu</div><div class="val" style="color:#2563eb">${money(inc)}</div></div>
+    <div class="k"><div class="label">Tổng Chi</div><div class="val" style="color:#dc2626">${money(exp)}</div></div>
+    <div class="k"><div class="label">Chênh lệch</div><div class="val" style="color:${net>=0?'#059669':'#dc2626'}">${net>=0?'+':'-'}${money(Math.abs(net))}</div></div>`;
+}
 function renderTable(){
   const tbody = $('#dataTable tbody'); tbody.innerHTML='';
   rows().slice().reverse().forEach(r=>{
@@ -309,7 +334,8 @@ function renderTable(){
       <td class="right col-del"><button class="secondary" data-del="${r.id}">Xoá</button></td>`;
     tbody.appendChild(tr);
   });
-  $$('button[data-del]').forEach(b=> b.onclick=()=>{ const id=b.getAttribute('data-del'); const all=rows().filter(x=>String(x.id)!==String(id)); save(all); renderTable(); });
+  $$('button[data-del]').forEach(b=> b.onclick=()=>{ const id=b.getAttribute('data-del'); const all=rows().filter(x=>String(x.id)!==String(id)); save(all); renderTable(); refreshKPITop(); });
+  refreshKPITop();
 }
 function addRow(){
   const date=$('#dateInput').value, amount=Number($('#amountInput').value||0), note=$('#noteInput').value.trim();
@@ -355,6 +381,12 @@ function renderCalendar(){
     cell.onclick=()=>showDayDetail(shown);
     grid.appendChild(cell);
   }
+  // month totals
+  let mInc=0, mExp=0;
+  rs.forEach(r=>{ const [y,m]=r.date.split('-').map(Number); if(y===calYear && m===calMonth+1){ if(r.type==='income') mInc+=Number(r.amount||0); else mExp+=Number(r.amount||0);} });
+  $('#mIncome').textContent='+'+money(mInc);
+  $('#mExpense').textContent='-'+money(mExp);
+  const net=mInc-mExp; $('#mNet').textContent=(net>=0?'+':'-')+money(Math.abs(net));
 }
 function showDayDetail(dateStr){
   $('#detailDate').textContent=dateStr;
@@ -382,13 +414,30 @@ function drawDonut(values, labels){
   const total=values.reduce((a,b)=>a+b,0)||1; let ang=-Math.PI/2;
   values.forEach((v,i)=>{ const a=(v/total)*Math.PI*2; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,ang,ang+a); ctx.closePath(); ctx.fillStyle=palette(i); ctx.fill(); ang+=a; });
   ctx.globalCompositeOperation='destination-out'; ctx.beginPath(); ctx.arc(cx,cy,r2,0,Math.PI*2); ctx.fill();
-  ctx.globalCompositeOperation='source-over'; ctx.fillStyle='#111827'; ctx.textAlign='center'; ctx.font='700 14px system-ui'; ctx.fillText('Tổng: '+money(total), cx, cy+6);
+  ctx.globalCompositeOperation='source-over'; ctx.fillStyle='#111827'; ctx.textAlign='center'; ctx.font='700 14px system-ui'; ctx.fillText('Tổng: '+(values.reduce((a,b)=>a+b,0)?(values.reduce((a,b)=>a+b,0)).toLocaleString('vi-VN')+'đ':'0đ'), cx, cy+6);
 }
 function renderReport(){
   const all=rows();
-  let filtered=[];
-  if(repMode==='monthly'){ const [yy,mm]=$('#reportMonth').value.split('-'); const y=Number(yy), m=Number(mm); filtered=all.filter(r=>{const [ry,rm]=r.date.split('-').map(Number); return ry===y && rm===m;}); }
-  else { const y=Number($('#reportYear').value||new Date().getFullYear()); filtered=all.filter(r=>Number(r.date.split('-')[0])===y); }
+  let filtered=[], titlePeriod='';
+  if(repMode==='monthly'){
+    const [yy,mm]=$('#reportMonth').value.split('-'); const y=Number(yy), m=Number(mm);
+    filtered=all.filter(r=>{const [ry,rm]=r.date.split('-').map(Number); return ry===y && rm===m;});
+    titlePeriod='Tổng theo ngày ('+String(mm).padStart(2,'0')+'/'+y+')';
+    $('#sumTitle').textContent=titlePeriod;
+  } else {
+    const y=Number($('#reportYear').value||new Date().getFullYear());
+    filtered=all.filter(r=>Number(r.date.split('-')[0])===y);
+    titlePeriod='Tổng theo tháng ('+y+')';
+    $('#sumTitle').textContent=titlePeriod;
+  }
+  // Top totals
+  let inc=0,exp=0; filtered.forEach(r=>{ if(r.type==='income') inc+=Number(r.amount||0); else exp+=Number(r.amount||0); });
+  const net=inc-exp;
+  $('#rIncome').textContent=money(inc);
+  $('#rExpense').textContent=money(exp);
+  $('#rNet').textContent=(net>=0?'+':'-')+money(Math.abs(net));
+
+  // Donut by category for selected type
   const list=filtered.filter(r=>r.type===repType);
   const map=new Map(); list.forEach(r=> map.set(r.category,(map.get(r.category)||0)+Number(r.amount||0)));
   const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
@@ -396,14 +445,50 @@ function renderReport(){
   drawDonut(values, labels);
   const legend=$('#legend'); legend.innerHTML='';
   const total=values.reduce((a,b)=>a+b,0);
-  if(!arr.length){ legend.innerHTML='<div class="muted">Không có dữ liệu</div>'; return; }
-  arr.forEach((e,i)=>{
-    const d=document.createElement('div'); d.className='legend-item';
-    const pct= total? (e[1]*100/total):0;
-    d.innerHTML=`<div style="display:flex; align-items:center; gap:8px"><span class="lbox" style="background:${palette(i)}"></span><strong>${e[0]}</strong></div>
-      <div>${money(e[1])} <span class="muted">(${pct.toFixed(1)}%)</span></div>`;
-    legend.appendChild(d);
-  });
+  if(!arr.length){ legend.innerHTML='<div class="muted">Không có dữ liệu</div>'; } else {
+    arr.forEach((e,i)=>{
+      const d=document.createElement('div'); d.className='legend-item';
+      const pct= total? (e[1]*100/total):0;
+      d.innerHTML=`<div style="display:flex; align-items:center; gap:8px"><span class="lbox" style="background:${palette(i)}"></span><strong>${e[0]}</strong></div>
+        <div>${(e[1]).toLocaleString('vi-VN')}đ <span class="muted">(${pct.toFixed(1)}%)</span></div>`;
+      legend.appendChild(d);
+    });
+  }
+
+  // Period summary table (daily or monthly)
+  const tbody=$('#periodBody'); tbody.innerHTML='';
+  if(repMode==='monthly'){
+    const [yy,mm]=$('#reportMonth').value.split('-'); const y=Number(yy), m=Number(mm);
+    const days = new Date(y,m,0).getDate();
+    for(let d=1; d<=days; d++){
+      const key = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      let ti=0, te=0;
+      filtered.forEach(r=>{ if(r.date===key){ if(r.type==='income') ti+=Number(r.amount||0); else te+=Number(r.amount||0); } });
+      if(ti || te){
+        const tr=document.createElement('tr');
+        const net=ti-te;
+        tr.innerHTML=`<td>${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}</td>
+          <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
+          <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
+          <td class="right" style="color:${net>=0?'#059669':'#dc2626'}">${net?((net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'):''}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+  } else {
+    const y=Number($('#reportYear').value||new Date().getFullYear());
+    for(let m=1;m<=12;m++){
+      let ti=0, te=0;
+      filtered.forEach(r=>{ const [ry,rm]=r.date.split('-').map(Number); if(rm===m){ if(r.type==='income') ti+=Number(r.amount||0); else te+=Number(r.amount||0);} });
+      if(ti || te){
+        const tr=document.createElement('tr'); const net=ti-te;
+        tr.innerHTML=`<td>Th ${m}</td>
+          <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
+          <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
+          <td class="right" style="color:${net>=0?'#059669':'#dc2626'}">${net?((net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'):''}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+  }
 }
 $('#btnMonthly').onclick=()=>{ repMode='monthly'; $('#btnMonthly').classList.add('active'); $('#btnYearly').classList.remove('active'); $('#reportYear').style.display='none'; $('#reportMonth').style.display='inline-block'; renderReport(); };
 $('#btnYearly').onclick=()=>{ repMode='yearly'; $('#btnYearly').classList.add('active'); $('#btnMonthly').classList.remove('active'); $('#reportMonth').style.display='none'; $('#reportYear').style.display='inline-block'; renderReport(); };
