@@ -1,335 +1,923 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Thu/Chi – Mobile PRO + Search</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sổ Thu Chi - Web App (Nhập & Báo cáo)</title>
 <style>
-:root{--bg:#f7f9fb;--card:#ffffff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#10b981;--accent2:#2563eb;--danger:#ef4444}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:var(--bg);color:var(--text)}
-.app{min-height:100%;display:flex;flex-direction:column}
-.header{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 14px 6px;border-bottom:1px solid var(--line)}
-.header h2{margin:0;font-size:18px}
-.content{flex:1 1 auto;padding:12px 12px 80px;max-width:960px;width:100%;margin:0 auto}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media (max-width:560px){.grid{grid-template-columns:1fr}}
-label{font-size:12px;color:var(--muted)}
-input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff}
-textarea{min-height:64px;resize:vertical}
-.category{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
-@media (max-width:560px){.category{grid-template-columns:repeat(2,1fr)}}
-.cat{padding:10px;text-align:center;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:14px;user-select:none}
-.cat.active{outline:2px solid var(--accent);background:#ecfdf5}
-.cat.custom{position:relative}
-.cat.custom .delhint{position:absolute;inset:auto 6px 6px auto;font-size:10px;color:#ef4444;display:none}
-.cat.custom.hold .delhint{display:block}
-.addcat{display:flex;gap:6px;margin-top:8px}
-.addcat input{flex:1}
-.addcat button{white-space:nowrap}
-.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-button{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#111827;color:#fff;font-weight:700;font-size:15px}
-button.secondary{background:#fff;color:#111827}
-button.blue{background:var(--accent2)}
-button.green{background:var(--accent)}
-button.red{background:var(--danger)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap}
-.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
-.pill.income{background:#ecfdf5;color:#065f46}
-.pill.expense{background:#fef2f2;color:#991b1b}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{border-bottom:1px solid var(--line);padding:10px 6px;vertical-align:top}
-th{background:#f9fafb;text-align:left}
-.right{text-align:right}
-.hidden{display:none}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:6px 0;color:var(--muted);font-weight:700;text-align:center}
-.day{background:#fff;border:1px solid var(--line);border-radius:10px;min-height:84px;padding:6px;display:flex;flex-direction:column;gap:6px}
-.day.other{opacity:.45}
-.day h4{margin:0;font-size:13px}
-.dmoney{font-size:12px}
-.dmoney .inc{color:#2563eb;display:block}
-.dmoney .exp{color:#dc2626;display:block}
-.day:active{outline:2px solid #93c5fd}
-.kpi{display:flex;gap:10px;margin:8px 0 2px;flex-wrap:wrap}
-.k{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:150px}
-.k .label{font-size:12px;color:#6b7280}
-.k .val{font-weight:900}
-.report-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.switch{display:inline-flex;background:#eef2ff;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.switch button{background:transparent;color:#111827;border:0;padding:8px 12px;font-weight:700}
-.switch button.active{background:var(--accent2);color:#fff}
-.legend{margin-top:8px}
-.legend-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
-.lbox{width:14px;height:14px;border-radius:3px;display:inline-block}
-.tabbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);height:64px;display:grid;grid-template-columns:repeat(3,1fr);z-index:10}
-.tabi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#6b7280;font-weight:700}
-.tabi.active{color:#2563eb}
-.icon{font-size:18px;line-height:18px}
-@media (max-width:420px){th.col-del,td.col-del{display:none}.header h2{font-size:17px}}
+  :root{
+    --bg:#ffffff; --fg:#0f172a; --muted:#64748b;
+    --accent:#f59e0b; --accent2:#2563eb;
+    --green:#16a34a; --red:#dc2626;
+    --card:#f8fafc; --border:#e2e8f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:5}
+  .wrap{max-width:1100px;margin:0 auto;padding:14px}
+  h1{font-size:18px;margin:0 0 10px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .toolbar .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  input,select,button,textarea{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#fff;color:var(--fg)}
+  button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
+  button.ghost{background:#fff}
+  .quick button{border-radius:20px;padding:6px 10px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .card h3{margin:0 0 6px;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+  .value{font-size:20px;font-weight:700}
+  .value.green{color:var(--green)}
+  .value.red{color:var(--red)}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  thead th{position:sticky;top:56px;background:#fafafa;border-bottom:1px solid var(--border);padding:10px;text-align:left;font-size:12px;color:var(--muted)}
+  tbody td{border-bottom:1px solid var(--border);padding:10px;vertical-align:top}
+  tbody tr:hover td{background:#f9fafb}
+  .type-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
+  .type-income{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+  .type-expense{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
+  .table-wrap{overflow:auto;border-radius:12px}
+  footer{padding:24px;color:var(--muted)}
+  .mobile .cards{grid-template-columns:1fr}
+  .mobile thead th{top:98px}
+  .hint{color:var(--muted);font-size:12px}
+
+  .entry{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border)}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tab{flex:0 0 auto;padding:10px 14px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:600}
+  .tab.active{background:#fff7ed;border-color:#fed7aa;color:#b45309}
+  .tab.income.active{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
+  .field{display:flex;align-items:center;gap:10px;margin:8px 0}
+  .field label{min-width:70px;color:#475569}
+  .amount{font-size:16px;font-weight:700}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .cat{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;cursor:pointer}
+  .cat.active{outline:2px solid #ffd28a;background:#fffaf0}
+  .cat .ico{font-size:20px;width:22px;text-align:center}
+  .bigButton{display:block;width:100%;padding:16px 18px;border-radius:999px;border:none;background:var(--accent);color:#111;font-weight:800;font-size:16px;cursor:pointer;margin:14px 0}
+  .subnav{display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid var(--border);color:#64748b}
+  .subnav .item{display:flex;flex-direction:column;align-items:center;font-size:12px;gap:4px;padding:6px 8px}
+  .danger{color:var(--red);cursor:pointer}
+  .row-actions{display:flex;gap:8px}
+  .sep{width:1px;height:24px;background:var(--border)}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header"><h2>Ghi chép Thu/Chi</h2></div>
-  <div class="content">
-
-    <section id="page-input">
+<header>
+  <div class="wrap">
+    <h1>Sổ Thu Chi (Offline) — TTM</h1>
+    <div class="toolbar">
+      <div class="group">
+        <label>Từ ngày <input type="date" id="fromDate"></label>
+        <label>Đến ngày <input type="date" id="toDate"></label>
+      </div>
+      <div class="group quick">
+        <button class="ghost" data-q="today">Hôm nay</button>
+        <button class="ghost" data-q="week">Tuần này</button>
+        <button class="ghost" data-q="month">Tháng này</button>
+        <button class="ghost" data-q="year">Năm nay</button>
+        <button class="ghost" data-q="all">Tất cả</button>
+      </div>
+      <div class="group">
+        <select id="typeSel">
+          <option value="">Loại: Tất cả</option>
+          <option value="Income">Thu</option>
+          <option value="Expense">Chi</option>
+        </select>
+        <select id="catSel">
+          <option value="">Danh mục: Tất cả</option>
+        </select>
+        <input id="search" placeholder="Tìm ghi chú / danh mục..." />
+      </div>
+      <div class="group">
+        <button id="btnImport" class="ghost">Nhập CSV</button>
+        <div class="sep"></div>
+        <button id="btnExport" class="primary">Xuất CSV (lọc hiện tại)</button>
+        <input id="fileCSV" type="file" accept=".csv,text/csv" style="display:none" />
+      </div>
+    </div>
+    <div class="cards">
       <div class="card">
-        <div class="toolbar" style="justify-content:space-between;align-items:center">
-          <div class="switch" role="tablist" aria-label="Chọn loại ghi chép">
-            <button id="btnIncome" class="active" aria-selected="true">Tiền thu</button>
-            <button id="btnExpense" aria-selected="false">Tiền chi</button>
-          </div>
-          <div class="toolbar">
-            <button class="blue" id="exportBtn">Xuất CSV</button>
-            <label class="file">
-              <button class="secondary" id="importBtn">Nhập CSV</button>
-              <input type="file" id="csvInput" accept=".csv,text/csv" style="display:none">
-            </label>
-            <button class="red" id="clearAllBtn">Xoá</button>
-          </div>
-        </div>
-
-        <div class="grid" style="margin-top:8px">
-          <div><label>Ngày</label><input type="date" id="dateInput"></div>
-          <div><label>Số tiền (đ)</label><input type="number" id="amountInput" min="0" step="1000" placeholder="0"></div>
-          <div><label>Ghi chú</label><textarea id="noteInput" placeholder="Nhập ghi chú..."></textarea></div>
-          <div>
-            <label>Danh mục</label>
-            <div class="category" id="categoryWrap"></div>
-            <div class="addcat">
-              <input id="newCategory" type="text" placeholder="Thêm danh mục mới (vd: Linh kiện iPhone)">
-              <button class="secondary" id="addCatBtn">➕ Thêm</button>
-            </div>
-            <div class="muted" style="font-size:12px;margin-top:6px">Mẹo: Nhấn & giữ vào danh mục tự tạo để xoá.</div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="green" id="submitBtn" style="flex:1">Nhập khoản</button>
-          <button class="secondary" id="resetBtn">Làm mới</button>
-        </div>
+        <h3>Tổng Thu</h3>
+        <div id="sumIncome" class="value green">0</div>
       </div>
-
-      <div class="card" style="margin-top:10px">
-        <h3 style="margin:0 0 8px">Tìm kiếm</h3>
-        <div class="grid" style="grid-template-columns:1fr 1fr 1fr 1fr">
-          <div><label>Từ khoá</label><input id="qText" placeholder="Ghi chú, danh mục, số tiền..."></div>
-          <div><label>Loại</label><select id="qType"><option value="">Tất cả</option><option value="income">Thu</option><option value="expense">Chi</option></select></div>
-          <div><label>Từ ngày</label><input type="date" id="qFrom"></div>
-          <div><label>Đến ngày</label><input type="date" id="qTo"></div>
-        </div>
-        <div class="grid" style="grid-template-columns:1fr 160px 160px;margin-top:8px">
-          <div><label>Danh mục</label><select id="qCategory"><option value="">Tất cả</option></select></div>
-          <div><button class="secondary" id="clearFilterBtn" style="width:100%">Xoá bộ lọc</button></div>
-          <div><button class="blue" id="applyFilterBtn" style="width:100%">Áp dụng</button></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:10px">
-        <div class="kpi" id="kpiTop"></div>
-        <div style="font-size:12px;color:#6b7280;margin-bottom:6px" id="searchInfo"></div>
-        <table id="dataTable" aria-label="Danh sách thu chi">
-          <thead><tr><th>Loại</th><th>Ngày</th><th>Danh mục</th><th>Ghi chú</th><th class="right">Số tiền</th><th class="col-del"></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="page-calendar" class="hidden">
       <div class="card">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between">
-          <div style="display:flex;gap:6px;align-items:center">
-            <button class="secondary" id="prevMonth">&larr;</button>
-            <div><strong id="calTitle">10/2025</strong> <span class="muted" id="calRange">(01–31)</span></div>
-            <button class="secondary" id="nextMonth">&rarr;</button>
-          </div>
-          <input type="month" id="monthPicker">
-        </div>
-        <div class="kpi">
-          <div class="k"><div class="label">Thu nhập</div><div class="val" id="mIncome">0</div></div>
-          <div class="k"><div class="label">Chi tiêu</div><div class="val" id="mExpense">0</div></div>
-          <div class="k"><div class="label">Tổng</div><div class="val" id="mNet">0</div></div>
-        </div>
-        <div class="cal-head"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div></div>
-        <div class="calendar" id="calendarGrid"></div>
+        <h3>Tổng Chi</h3>
+        <div id="sumExpense" class="value red">0</div>
       </div>
-      <div class="card" id="dayDetail" style="margin-top:10px">
-        <h3 style="margin:0 0 6px">Chi tiết ngày <span id="detailDate" class="muted"></span></h3>
-        <table>
-          <thead><tr><th>Loại</th><th>Danh mục</th><th>Ghi chú</th><th class="right">Số tiền</th></tr></thead>
-          <tbody id="detailBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="page-report" class="hidden">
       <div class="card">
-        <div class="report-top">
-          <div class="switch"><button id="btnMonthly" class="active">Hàng tháng</button><button id="btnYearly">Hàng năm</button></div>
-          <input type="month" id="reportMonth">
-          <input type="number" id="reportYear" min="1970" style="width:110px" placeholder="Năm">
-          <div class="switch"><button id="btnRepExpense" class="active">Chi tiêu</button><button id="btnRepIncome">Thu nhập</button></div>
-        </div>
-        <div class="kpi">
-          <div class="k"><div class="label">Tổng Thu</div><div class="val" id="rIncome">0</div></div>
-          <div class="k"><div class="label">Tổng Chi</div><div class="val" id="rExpense">0</div></div>
-          <div class="k"><div class="label">Chênh lệch</div><div class="val" id="rNet">0</div></div>
-        </div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;align-items:flex-start">
-          <canvas id="donut" width="260" height="260" style="background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
-          <div style="flex:1;min-width:220px"><h3 style="margin:0 0 6px">Chi tiết theo danh mục</h3><div class="legend" id="legend"></div></div>
-        </div>
+        <h3>Chênh lệch</h3>
+        <div id="sumNet" class="value">0</div>
       </div>
-      <div class="card" style="margin-top:10px">
-        <h3 style="margin:0 0 6px" id="sumTitle">Tổng theo ngày</h3>
-        <table>
-          <thead><tr><th>Kỳ</th><th class="right">Thu</th><th class="right">Chi</th><th class="right">Chênh lệch</th></tr></thead>
-          <tbody id="periodBody"></tbody>
-        </table>
-      </div>
-    </section>
-
+    </div>
   </div>
+</header>
 
-  <div class="tabbar">
-    <div class="tabi active" data-page="input"><div class="icon">📥</div>Nhập</div>
-    <div class="tabi" data-page="calendar"><div class="icon">📅</div>Lịch</div>
-    <div class="tabi" data-page="report"><div class="icon">📊</div>Báo cáo</div>
+<main class="wrap">
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th>Ngày</th>
+          <th>Loại</th>
+          <th>Danh mục</th>
+          <th>Ghi chú</th>
+          <th style="text-align:right">Số tiền (đ)</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
-</div>
+</main>
+
+<section class="entry">
+  <div class="wrap">
+    <div class="tabs">
+      <div id="tabExpense" class="tab active">Tiền chi</div>
+      <div id="tabIncome" class="tab income">Tiền thu</div>
+    </div>
+
+    <div class="field">
+      <label>Ngày</label>
+      <input id="inDate" type="date" />
+    </div>
+    <div class="field">
+      <label>Ghi chú</label>
+      <input id="inMemo" type="text" placeholder="Chưa nhập vào" />
+    </div>
+    <div class="field">
+      <label id="amountLabel">Tiền chi</label>
+      <input id="inAmount" class="amount" type="number" step="1" min="0" inputmode="numeric" placeholder="0" />
+      <div>đ</div>
+    </div>
+
+    <div class="field"><label>Danh mục</label></div>
+    <div id="catGrid" class="grid"></div>
+
+    <button id="btnAdd" class="bigButton">Nhập khoản chi</button>
+  </div>
+  <div class="subnav">
+    <div class="item">📝 <span>Nhập vào</span></div>
+    <div class="item">📅 <span>Lịch</span></div>
+    <div class="item">📊 <span>Báo cáo</span></div>
+    <div class="item">⋯ <span>Khác</span></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="hint">CSV gốc + CSV nhập thêm đều xử lý cục bộ; khoản mới nhập tay lưu ở localStorage.</div>
+</footer>
+
+<script id="csvData" type="text/plain">inputDate, amount(dong), memo, type, categoryId, categoryName, categoryIcon, categoryColor, categoryIndex, fixedCostSettingId, fixedCostSettingStartDate, fixedCostSettingEndDate, fixedCostSettingFrequency, fixedCostSettingLastInsertedToDailyData, dayOffOption
+2025/4/28,0,,Expense,-1,Không có,categoryNashi,505050,-1,,,,,,
+2025/4/28,0,,Income,12,Tiền lương,categoryDefault11,4eb46a,13,,,,,,
+2025/6/2,500000,Ép capfold 3,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/2,15000,Chợ mua đồ ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/2,700000,Fix 13prm (Đông),Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/4,1500000,,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/4,200000,,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/5,1500000,Tiền út,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/5,500000,Fix 13pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/5,180000,Kính 8p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/5,50000,Cơm cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/6/8,500000,Cảm 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/9,500000,13prm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/9,450000,Kính 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/9,200000,Chi tiêu,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/10,50000,Chi tieu,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/10,150000,Cảm xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/10,1100000,Thay màn 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/11,50000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/6/11,25000,Cơm trưa,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/6/11,50000,Xăng,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/11,370000,Cảm xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/11,450000,Kính 12pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/11,500000,Cảm xsm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/13,220000,Xsm cảm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/13,200000,Màn 7p ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/13,30000,Kính 8p ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/13,50000,530,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/13,500000,Cảm xsm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/13,180000,Kính 8p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/14,200000,Lưng 14prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/14,220000,Cảm xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/14,500000,Lưng 14prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/14,750000,7p thay màn lưng,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/16,500000,Pin 12pro vy hàng xóm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/16,600000,13prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/17,100000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/6/17,100000,Chợ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/17,400000,Cáp zflip5,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/17,1400000,Zflip 5 khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/17,900000,Fx,Income,16,Đầu tư,categoryDefault15,42d2c1,17,,,,,,
+2025/6/17,750000,Trả a hoàng ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/18,100000,Ăn sáng cf,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/18,250000,Lưng + pq,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/6/18,1500000,13prm ek lưng ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/18,450000,Cảm xr khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/19,200000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/6/19,500000,Cảm xsm khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/19,450000,Xr cảm khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/19,500000,Pin xsm khách lẻ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/21,200000,Chi tiêu,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/6/21,400000,Kính 11prm nhân,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/21,350000,Pin 8p ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/21,650000,Kính 11prm + cáp ( nhân ),Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/21,450000,Kính 12pro khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/6/21,700000,Cáp 13prm a Đông,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/2,190000,Mua gạo,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/7/2,400000,Cáp zflip 5,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/2,800000,Cáp zflip 5,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/3,310000,Màn xs ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/3,380000,Cảm 12prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/3,500000,Màn xs ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/4,100000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/4,100000,Kính 12prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/4,700000,Kính 12prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/4,350000,Kính xsm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/4,900000,Cảm 12prm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/4,198000,Mua bánh + ôc,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/4,750000,Mua màn 11prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/4,900000,Màn 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/5,100000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/5,220000,Chợ ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/7/7,50000,Ăn sáng cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/7,500000,Mua linh kiện,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/7,500000,Cảm xsm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/7,900000,Cảm 12prm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/7,250000,Keo 2tp ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/9,150000,Cảm 11 pro max ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/9,550000,Cảm 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/9,500000,Cảm 11pro ( Khai ),Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/10,540000,Màn vivo v20fe,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/10,25000,Cơm ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/10,800000,Màn vivo ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/10,550000,Cảm 11pro max,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/10,260000,Cảm 11prm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/10,400000,Kính xsm 400,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,50000,Ăn sán cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/11,250000,Pin a15 ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,140000,Cell a15 ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/11,400000,Cảm x ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,30000,Cơm trưa,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/11,700000,"Lưng, pin, flash 14pro lãi",Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,500000,Fix 13pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,300000,Hồ cá + cá,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/7/11,300000,Cáp 11pro khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/11,700000,Fix 13pro max ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/12,220000,Màn a03,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/12,80000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/7/12,90000,Mua lọc,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/7/12,800000,Fix 13pro ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/12,500000,Ek 13pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/12,800000,Fix 14pro max ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/12,400000,Thay màn a03,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/12,400000,Thay màn redmi 9c,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/16,2500000,Sinh hoạt đám cưới ăn uống,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/7/18,500000,Cảm xsm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/18,900000,Cảm gen 10,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/7/18,860000,Cảm ứng ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/7/20,7000000,Tiền nhà,Expense,11,Tiền nhà,categoryDefault10,ffa400,20,,,,,,
+2025/8/3,80000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/3,20000,Chợ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/3,26000,Nuôi bò,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/3,1000000,13prm ic ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/3,700000,Ic kính ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/3,450000,Kính 11prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/3,1500000,Mua màn đền,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/3,700000,Cáp 12prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/2,100000,Ăn uống chợ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/2,900000,Note 10p kính ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/2,1700000,Note 10p kính pin ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/3,300000,Frp ss ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/3,1200000,Kính 13prm + fix ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/3,700000,Fix 13prm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/2,350000,Khám bệnh cho Gạo,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/8/4,600000,Ăn uống sinh nhật,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/4,500000,K nhớ ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/5,150000,Ăn sáng chợ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/5,700000,Kính 12pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/5,100000,Kính 12pm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/6,140000,Ăn sáng cf chi tiêu,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/6,700000,Fix 13pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/6,1500000,Cảm 14pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/6,750000,Cảm 14pm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/7,86000,Thuốc 86,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/8/7,100000,Ăn sáng cf chợ 100,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/7,220000,Pin + cáp 12p,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/7,150000,Cảm xsm 150,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/7,500000,Cảm xsm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/7,700000,Fix 13pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/7,180000,Kính 8p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/7,50000,Kính 8p,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/7,900000,Kính 11pm + kính 12p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/7,700000,Màn x,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/8,8000,Thuốc ,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/8/8,45000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/8,40000,Cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/8,200000,Kính a23,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/9,70000,Ăn sáng gạo cf,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/9,400000,Cảm x,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/7,500000,Mua đồ trang điểm ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/8,350000,"Mua sữa tắm, tẩy trang",Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/9,600000,Màn xs,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/9,350000,Mua màn xs,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/9,170000,Cf gia đình ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/10,80000,Ăn sáng 80,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/10,27000,Cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/10,75000,Ăn cút trứng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/11,70000,Ăn sáng cf 70k,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/11,700000,13pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/11,650000,Xsm kính + lưng ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/11,150000,Lưng xsm + kính camera ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/11,10000,Nước mía ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/11,28000,Thuốc vai gáy,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/8/11,350000,Kính 11pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/11,110000,Mua khăn ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/11,30000,Kính cam xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/12,550000,Cảm 11pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/12,150000,Cảm 11prm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/13,1160000,Sữa xe,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/13,300000,Mua cảm ứng ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/13,100000,Ăn uống cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/16,2600000,Đà lat,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/6,1250000,Tiền điện,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/18,80000,Ăn uống ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/18,600000,Fix 13pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/18,450000,Ek 13,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/19,680000,Mua lk,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/19,60000,Cf ăn sang,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/19,1400000,Vỏ màn 8p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/19,1000000,Fix 13pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/18,400000,Đám cưới,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/19,55000,Gà ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/19,100000,Chân gà bia,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/8/20,100000,Chi tiêu,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/8/20,90000,Mua sac ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/8/20,500000,11pro,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/8/20,170000,Sạc,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/8/26,8200000,Tiền ngân hàng,Expense,21,Ngân hàng,category1,ffe666,21,,,,,,
+2025/9/19,80000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/19,600000,Momo,Expense,21,Ngân hàng,category1,ffe666,21,,,,,,
+2025/9/19,200000,Máy lạnh ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/27,350000,Kính 11 huy tấn cường,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/20,70000,Ăn uống cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/20,1700000,Màn 13pm lk ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/20,2200000,Thay màn 13pm oled ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/22,105000,Cf ăn uống ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/22,300000,Xsm cáp ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/22,350000,Xsm kính ( chuyên ),Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/22,800000,Cáp 13pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/22,75000,Gỏi ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/22,40000,Tạp hoá,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/22,298000,Sữa con,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,100000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/23,76000,Chợ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,165000,Mua dán tường ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,55000,Giấy mì,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,400000,Pin 13pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/23,850000,Lưng 11pm cell cáp loa ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/23,195000,Cảm xsm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/23,110000,Dây loa 11pm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/23,125000,Lưng 11pm lt,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/23,550000,Pin 14pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/23,500000,Cảm xsm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/23,380000,Pin 12pm drp,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/23,500000, pin 12pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/23,243000,Bách hoá xanh,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,250000,Gạo dầu ăn,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,177000,Uyên uyên ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/23,104000,Uyên uyên ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/24,18000,Cà phê,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/24,70000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/24,18000,Chợ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/24,450000,Kính 12p Chuyên,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/24,240000,Cảm salaman,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/24,500000,Cảm xsm huy tấn cường,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/24,700000,Fix 13pm Hoàng Ba Tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/24,150000,Lưng 12pm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/24,400000,Thay lưng 12pm quốc,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/24,700000,Fix 13pm Lee,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/25,70000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/25,400000,Cảm xs Duy Việt,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/25,290000,Mua cảm ipad gen10 ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/25,850000,Cảm gen 10 ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/25,700000,Fix 13pm Nhớ mobile,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/25,190000,190,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/26,20000,Cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/26,100000,Khách bo ,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/9/26,250000,Pin X ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/26,170000,Cảm xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/26,450000,Pin x ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/26,500000,Cảm xsm Thịnh,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/26,250000,Pin 6p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/27,60000,Ăn sáng cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/27,180000,Pin 7p,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/27,350000,Thay pin 7p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/27,60000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/27,320000,Mua lk,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/28,70000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/28,320000,Lk ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/28,150000,Cảm 11pm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/28,550000,Cảm 11pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/28,350000,Kính 11 huy tấn cường,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/28,380000,Yến,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/28,100000,Cường lực,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/9/29,70000,Ăn sáng cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/9/29,10000,Rau,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/29,150000,Cảm xsm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/9/29,500000,Cảm xsm La duy,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/29,500000,Cảm xsm Phương Duy,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/29,800000,Cáp 14pro Thành Vinh,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/9/27,1600000,Đóng ngân hàng,Expense,21,Ngân hàng,category1,ffe666,21,,,,,,
+2025/9/30,200000,Chợ ăn sáng cf,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/9/30,400000,Màn 12,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/1,400000,Ăn sáng cf chi linh tinh,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/1,1750000,Mua màn s20ultra ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/2,2200000,Thay màn s20ultra oled,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/2,50000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/3,180000,Chợ cf ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/3,500000,Lưng 12pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/3,100000,Bắn lưng 100k ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/3,450000,Lưng 14pro ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/3,600000,Fix 13pro đông ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/3,400000,Bán màn 13pm lê hiển lãi,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/10/3,90000,Bánh trung thu,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/3,500000,Mua màn 13pm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/3,1600000,Bán màn 13prm Danh,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/10/3,1500000,Tiền gửi Út,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/4,120000,"Chợ, ăn sáng cf",Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/4,200000,Cảm xr ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/4,500000,Kính xsm Rin,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/4,450000,Cảm 11prm khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/4,480000,Siêu thị,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/4,500000,Siêu thị ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/5,200000,Mua màn xr ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/5,80000,Ăn sáng cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/5,1220000,Trả linh kiện ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/6,50000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/6,300000,Tiền chi linh tinh,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/6,700000,Fix 13prm thiện,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/7,70000,Ăn sáng cf 70,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/7,180000,Pin 8p ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/7,350000,Pin 8p Hoan,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/7,500000,Cảm xsm khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/7,170000,Mua cảm xsm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/7,400000,Cảm x,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/8,130000,Chợ ăn sáng ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/8,180000,Kính linh kiện ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/8,300000,Kính 11 Nhân ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/8,450000,Kính xiaomi ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/8,1200000,Tiền cod,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/10/9,88000,Thuốc ,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/10/9,70000,Ăm sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/9,360000,Mua cảm xr lưng laser 360k ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/9,700000,Sữa 15prm nước ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/9,700000,Xr khách lẻ cảm lưng ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/9,450000,Lưng 15prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/9,2000000,15prm thay lưng sửa nguồn ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/9,700000,Fix 13prm hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/10,80000,Ăn sáng chợ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/10,1750000,Mua màn s22u ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/10,2200000,Thay màn s22u ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/10,800000,Cáp 14pm vinh,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/11,45000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/11,150000,7p,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/11,280000,Mỹ phẩm ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/11,200000,Đồ chơi cho Gạo,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/12,50000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/12,20000,Ship ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/12,160000,Linh kiện,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/12,500000,Kính seri4 40 mai phú quy,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/12,1000000,Ic 13pm La Duy,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/12,200000,Chơ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/12,1500000,Tiền ngân hàng ,Expense,21,Ngân hàng,category1,ffe666,21,,,,,,
+2025/10/12,115000,Trà sữa ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/13,50000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/13,400000,Cảm 14prm,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/13,1500000,Cảm 14pm Nam Van,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/13,900000,Cơ zflip 4 an mobile,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/13,700000,Fix 13prm hoang ba tau,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/13,800000,Cáp 13pm Ki,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/14,60000,Chợ ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/14,200000,Ron 14pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/14,240000,Màn 7p dr ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/15,60000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/15,700000,Fix 13pm QuocPham,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/16,60000,Ăn uống,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/16,235000,Yến ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/16,400000,Kính seri 4 lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/17,700000,13pro max a trực,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/17,45000,Ăn sáng cf ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/17,700000,Kính 12prm khai,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/17,150000,Kính với laser 12prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/17,700000,Fix 13prm Long,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/17,400000,Cảm X quốc ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/17,700000,Mua màn 13prm ,Expense,20,Linh kiện,category1,ffe666,3,,,,,,
+2025/10/17,351000,Siêu thị,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/17,60000,Ăn tối ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/17,70000,Nước ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/18,60000,Thịt ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/18,17000,Bí,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/18,15000,Ăn sáng Gạo,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/18,19000,Cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/15,3500000,Tiền nhà,Expense,11,Tiền nhà,categoryDefault10,ffa400,20,,,,,,
+2025/10/18,500000,Thay màn 8p ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/19,300000,Ăn sáng chợ ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/19,85000,Xăng ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/19,800000,14pro Ki,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/19,800000,Bán 15pm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/19,229000,Ăn ốc,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/20,80000,Ăn sáng cf,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/20,200000,Chợ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/20,700000,Fix 13pro max la duy,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/20,700000,Fix màn 13prm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/20,1700000,Bán màn 13pro max nhớ,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/10/22,1450000,Vacxin cho Gạo,Expense,6,Y tế,categoryDefault6,61e396,7,,,,,,
+2025/10/22,50000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/22,700000,Bán 11pm lãi,Income,15,Thu nhập phụ,categoryDefault14,00c7ff,16,,,,,,
+2025/10/22,700000,Fix màn 13pro max hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/23,200000,Ăn uống,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/24,300000,Ăn sáng chợ ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/24,900000,Cáp 13pro max khách lẻ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/24,1000000,Cáp 15pro max hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/24,700000,Fix 13pro max hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/24,900000,Cáp 14pro max La hiếu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/24,600000,Fix 13pro la hiếu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/25,200000,"Trà sữa, ăn sáng...",Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/25,200000,Cảm xsm lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/25,100000,Cảm 11pro lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/25,700000,Fix 13pm la hiếu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/26,70000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/26,200000,Thay lưng 12pm ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/26,500000,Trả quang,Expense,5,Phí giao lưu,categoryDefault7,ffd500,6,,,,,,
+2025/10/26,9900000,Đóng ngân hàng,Expense,21,Ngân hàng,category1,ffe666,21,,,,,,
+2025/10/28,100000,Chợ ăn uống ,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/28,350000,Cảm xsm lai chuyên,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/28,700000,Fix 13pm hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/28,900000,14pro liệt main,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/28,600000,Ek 12pm lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/28,300000,Pin 12pm lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/29,200000,Chợ ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/29,600000,Thay lưng 14pm thu vào,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/29,700000,Fix 13pm ki ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/30,200000,Linh tinh,Expense,2,Chi tiêu hàng ngày,categoryDefault1,00b547,2,,,,,,
+2025/10/30,450000,Kính 15pm lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/31,80000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/10/31,300000,Pin 12pm lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/31,90000,Công màn xsm,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/31,800000,Cáp 13pm hoàng ba tàu,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/10/31,700000,Cáp 13pm ki ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/11/1,800000,Đám cưới ,Expense,5,Phí giao lưu,categoryDefault7,ffd500,6,,,,,,
+2025/11/1,70000,Xăng,Expense,9,Đi lại,categoryDefault4,a9673c,10,,,,,,
+2025/11/2,50000,Ăn sáng ,Expense,1,Ăn uống,categoryDefault0,ff8700,1,,,,,,
+2025/11/2,250000,Pin 13 lãi ,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+2025/11/1,450000,Màn s20 lãi,Income,19,Tiền làm,category1,ffe666,12,,,,,,
+,,,Income,17,Thu nhập tạm thời,categoryDefault16,f98bbe,19,,,,,
+,,,Expense,7,Giáo dục,categoryDefault5,ff4950,8,,,,,
+,,,Expense,8,Tiền điện,categoryDefault8,09ceff,9,,,,,
+,,,Expense,3,Quần áo,categoryDefault2,1638a7,4,,,,,
+,,,Income,-2,Không có,categoryNashi,505050,-2,,,,,
+,,,Expense,10,Phí liên lạc,categoryDefault9,696969,11,,,,,
+,,,Income,14,Tiền thưởng,categoryDefault13,ff2e00,15,,,,,
+,,,Expense,4,Mỹ phẩm,categoryDefault3,ff54a8,5,,,,,
+,,,Income,13,Tiền phụ cấp,categoryDefault12,ffb27f,14,,,,,
+</script>
 
 <script>
-const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
-const DEF_INCOME=["Tiền làm","Tiền lương","Tiền phụ cấp","Tiền thưởng","Thu nhập phụ","Đầu tư","Thu nhập tạm thời"];
-const DEF_EXPENSE=["Ăn uống","Chi tiêu hàng ngày","Linh kiện","Y tế","Tiền nhà","Ngân hàng","Giải trí","Khác"];
-let currentType="income", currentCategory=DEF_INCOME[0];
-function todayStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());}
-function money(n){return Number(n||0).toLocaleString('vi-VN')+'đ';}
-function rows(){try{return JSON.parse(localStorage.getItem('s11_ledger')||'[]')}catch(e){return []}}
-function save(r){localStorage.setItem('s11_ledger',JSON.stringify(r))}
-function loadCustom(type){const k=type==='income'?'custom_categories_income':'custom_categories_expense';try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}}
-function saveCustom(type,arr){const k=type==='income'?'custom_categories_income':'custom_categories_expense';localStorage.setItem(k,JSON.stringify(arr))}
+const fmtMoney = (n) => { try{ return (n||0).toLocaleString('vi-VN'); }catch(e){ return String(n) } };
+const pad = (n)=> (n<10?'0':'')+n;
+const parseYMD = (s)=>{ if(!s) return null; const p = s.trim().split('/'); if(p.length<3) return null; const y = +p[0], m = +p[1]-1, d = +p[2]; const dt = new Date(y, m, d); return isNaN(dt.getTime())?null:dt; };
+const toDateInput = (dt)=> dt? dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate()) : '';
+const fromDateInput = (s)=>{ if(!s) return null; const p=s.split('-'); if(p.length<3) return null; return new Date(+p[0], +p[1]-1, +p[2]); };
+const inRange = (d, a, b)=>{ if(!d) return false; if(a && d < a) return false; if(b && d > b) return false; return true; };
 
-function setPage(p){$$('.tabi').forEach(t=>t.classList.toggle('active',t.dataset.page===p));
-  $('#page-input').classList.toggle('hidden',p!=='input');
-  $('#page-calendar').classList.toggle('hidden',p!=='calendar');
-  $('#page-report').classList.toggle('hidden',p!=='report');
-  if(p==='calendar') renderCalendar(); if(p==='report') renderReport();}
-$$('.tabi').forEach(t=>t.onclick=()=>setPage(t.dataset.page));
+function parseCSV(text) { 
+  const rows = []; let i=0, field='', row=[], inQuotes=false;
+  while(i<text.length){
+    const c = text[i];
+    if(inQuotes){
+      if(c==='"'){ if(text[i+1]==='"'){ field+='"'; i++; } else inQuotes=false; }
+      else{ field += c; }
+    }else{
+      if(c==='"'){ inQuotes=true; }
+      else if(c===','){ row.push(field); field=''; }
+      else if(c==='\n' || c==='\r'){ if(field!=='' || row.length>0){ row.push(field); rows.push(row); row=[]; field=''; } if(c==='\r' && text[i+1]==='\n') i++; }
+      else{ field += c; }
+    }
+    i++;
+  }
+  if(field!=='' || row.length>0){ row.push(field); rows.push(row); }
+  return rows;
+}
 
-function allCategories(){return Array.from(new Set(DEF_INCOME.concat(DEF_EXPENSE,loadCustom('income'),loadCustom('expense'))))}
-function fullCategories(type){return (type==='income'?DEF_INCOME:DEF_EXPENSE).concat(loadCustom(type))}
-function renderCats(){const list=fullCategories(currentType),wrap=$('#categoryWrap');wrap.innerHTML='';
-  list.forEach((name,i)=>{const isCustom=i>=(currentType==='income'?DEF_INCOME.length:DEF_EXPENSE.length);
-    const div=document.createElement('div');div.className='cat'+(i===0?' active':'')+(isCustom?' custom':'');
-    div.textContent=name;if(i===0)currentCategory=name;
-    div.onclick=()=>{$$('.cat').forEach(c=>c.classList.remove('active'));div.classList.add('active');currentCategory=name};
-    if(isCustom){const hint=document.createElement('span');hint.className='delhint';hint.textContent='Xoá';div.appendChild(hint);
-      let timer=null;const start=()=>{div.classList.add('hold');timer=setTimeout(()=>{if(confirm('Xoá danh mục "'+name+'"?')){const arr=loadCustom(currentType).filter(x=>x!==name);saveCustom(currentType,arr);renderCats();updateCategoryFilter()}div.classList.remove('hold')},700)};
-      const cancel=()=>{if(timer){clearTimeout(timer);timer=null}div.classList.remove('hold')};
-      div.addEventListener('touchstart',start);div.addEventListener('mousedown',start);
-      div.addEventListener('touchend',cancel);div.addEventListener('touchmove',cancel);
-      div.addEventListener('mouseleave',cancel);div.addEventListener('mouseup',cancel);}
-    wrap.appendChild(div);});}
-function addCustomCategory(){const input=$('#newCategory'),name=input.value.trim();if(!name){alert('Nhập tên danh mục');return}
-  if(allCategories().includes(name)){alert('Danh mục đã tồn tại');return}
-  const arr=loadCustom(currentType);arr.push(name);saveCustom(currentType,arr);input.value='';renderCats();updateCategoryFilter()}
-$('#addCatBtn').onclick=addCustomCategory;
+const RAW0 = parseCSV(document.getElementById('csvData').textContent.trim());
+const header0 = RAW0.shift();
+const colIndex = (header,name)=> header.findIndex(h => h.trim()===name);
 
-function updateCategoryFilter(){const sel=$('#qCategory'),cur=sel.value;sel.innerHTML='<option value="">Tất cả</option>'+allCategories().map(c=>`<option>${c}</option>`).join('');if(cur)sel.value=cur}
-function getFilteredRows(){const q=($('#qText').value||'').trim().toLowerCase(),type=$('#qType').value,cat=$('#qCategory').value,from=$('#qFrom').value,to=$('#qTo').value;
-  return rows().filter(r=>{if(type&&r.type!==type)return false;if(cat&&r.category!==cat)return false;if(from&&r.date<from)return false;if(to&&r.date>to)return false;
-    if(q){const s=(r.note||'')+' '+(r.category||'')+' '+(r.type)+' '+(r.amount||'')+' '+(r.date||'');if(s.toLowerCase().indexOf(q)===-1)return false;}return true})}
-function renderSearchInfo(list){const n=list.length;let inc=0,exp=0;list.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});
-  const net=inc-exp;$('#searchInfo').textContent=`Kết quả: ${n} dòng · Thu: ${inc.toLocaleString('vi-VN')}đ · Chi: ${exp.toLocaleString('vi-VN')}đ · Chênh lệch: ${(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')}đ`}
-function renderTable(){const list=getFilteredRows().slice().reverse(),tbody=$('#dataTable tbody');tbody.innerHTML='';
-  list.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td>
-    <td>${r.date}</td><td>${r.category||''}</td><td>${r.note||''}</td><td class="right">${money(r.amount)}</td><td class="right col-del"><button class="secondary" data-del="${r.id}">Xoá</button></td>`;tbody.appendChild(tr)});
-  $$('button[data-del]').forEach(b=>b.onclick=()=>{const id=b.getAttribute('data-del');const all=rows().filter(x=>String(x.id)!==String(id));save(all);renderTable();refreshKPITop()});
-  refreshKPITop();renderSearchInfo(list)}
-$('#applyFilterBtn').onclick=renderTable;
-$('#clearFilterBtn').onclick=()=>{$('#qText').value='';$('#qType').value='';$('#qCategory').value='';$('#qFrom').value='';$('#qTo').value='';renderTable()};
-$('#qText').addEventListener('input',()=>{renderTable()});
+function rowsToObjects(RAW, header){
+  const IDX = { 
+    date: colIndex(header,'inputDate'),
+    amount: colIndex(header,' amount(dong)'),
+    memo: colIndex(header,' memo'),
+    type: colIndex(header,' type'),
+    catName: colIndex(header,' categoryName')
+  };
+  return RAW.map(r=>{
+    const dt = parseYMD(r[IDX.date]);
+    const amount = parseFloat(r[IDX.amount]||'0')||0;
+    return { 
+      dateStr: r[IDX.date]||'',
+      date: dt,
+      type: (r[IDX.type]||'').trim(),
+      category: (r[IDX.catName]||'').trim(),
+      memo: (r[IDX.memo]||'').trim(),
+      amount,
+      src: 'csv'
+    };
+  }).filter(x=>x.date);
+}
 
-function refreshKPITop(){const rs=getFilteredRows();let inc=0,exp=0;rs.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});
-  const net=inc-exp;$('#kpiTop').innerHTML=`<div class="k"><div class="label">Tổng Thu (lọc)</div><div class="val" style="color:#2563eb">${money(inc)}</div></div>
-  <div class="k"><div class="label">Tổng Chi (lọc)</div><div class="val" style="color:#dc2626">${money(exp)}</div></div>
-  <div class="k"><div class="label">Chênh lệch</div><div class="val" style="color:${net>=0?'#059669':'#dc2626'}">${net>=0?'+':'-'}${Math.abs(net).toLocaleString('vi-VN')}đ</div></div>`}
+let DATA = rowsToObjects(RAW0, header0);
 
-function addRow(){const date=$('#dateInput').value,amount=Number($('#amountInput').value||0),note=$('#noteInput').value.trim();
-  if(!date){alert('Chọn ngày');return}if(amount<=0){alert('Số tiền > 0');return}
-  const r=rows();r.push({id:Date.now(),type:currentType,date,category:currentCategory,amount,note});save(r);
-  $('#amountInput').value='';$('#noteInput').value='';renderTable();updateCategoryFilter()}
-$('#btnIncome').onclick=()=>{currentType='income';$('#btnIncome').classList.add('active');$('#btnExpense').classList.remove('active');renderCats()};
-$('#btnExpense').onclick=()=>{currentType='expense';$('#btnExpense').classList.add('active');$('#btnIncome').classList.remove('active');renderCats()};
-$('#submitBtn').onclick=addRow;$('#resetBtn').onclick=()=>{$('#amountInput').value='';$('#noteInput').value=''};
-$('#clearAllBtn').onclick=()=>{if(confirm('Xoá toàn bộ?')){save([]);renderTable()}};
+const LS_KEY = 'ttm_money_local_rows_v1';
+const localRows = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+localRows.forEach(x=>{ x.date = fromDateInput(x.dateInput); x.dateStr = x.dateInput.replace(/-/g,'/'); x.src='local'; });
+DATA = DATA.concat(localRows);
 
-function toCSV(rs){const headers=['type','date','category','amount','note'];const esc=s=>s==null?'':(/[",\n]/.test(String(s))? '"'+String(s).replace(/"/g,'""')+'"':String(s));const out=[headers.join(',')];rs.forEach(r=>out.push(headers.map(h=>esc(r[h])).join(',')));return out.join('\n')}
-function parseCSV(t){const rows=[];let cur=[],cell='',inQ=false;for(let i=0;i<t.length;i++){const ch=t[i];if(inQ){if(ch=='"'){if(t[i+1]=='"'){cell+='"';i++;}else inQ=false;}else cell+=ch;}else{if(ch=='"')inQ=true;else if(ch==','){cur.push(cell);cell='';}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;cur.push(cell);cell='';if(cur.some(x=>x!==''))rows.push(cur);cur=[];}else cell+=ch;}}if(cell.length||cur.length){cur.push(cell);rows.push(cur);}return rows}
-$('#exportBtn').onclick=()=>{const blob=new Blob([toCSV(rows())],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='so_thu_chi.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},0)};
-$('#csvInput').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const arr=parseCSV(r.result||'');if(!arr.length)return alert('CSV rỗng');const header=arr[0];const need=['type','date','category','amount','note'];if(!need.every(h=>header.includes(h)))return alert('CSV sai header');const idx=Object.fromEntries(header.map((h,i)=>[h,i]));const all=rows();for(let i=1;i<arr.length;i++){const x=arr[i];if(!x||!x.length)continue;const row={id:Date.now()+i,type:(x[idx.type]||'income').trim(),date:(x[idx.date]||todayStr()).trim(),category:x[idx.category]||'',amount:Number(x[idx.amount]||0),note:x[idx.note]||''};if(!row.amount||!row.date)continue;all.push(row)}save(all);renderTable();alert('Nhập CSV xong')};r.readAsText(f,'utf-8');e.target.value=''});
-$('#importBtn').onclick=()=>$('#csvInput').click();
+const defaultCats = [
+  {name:'Ăn uống', ico:'🍽️'},
+  {name:'Chi tiêu hàng ngày', ico:'🛍️'},
+  {name:'Quần áo', ico:'👕'},
+  {name:'Mỹ phẩm', ico:'💄'},
+  {name:'Phí giao lưu', ico:'🥂'},
+  {name:'Y tế', ico:'💊'},
+  {name:'Giáo dục', ico:'📚'},
+  {name:'Tiền điện', ico:'💡'},
+  {name:'Đi lại', ico:'🚆'},
+  {name:'Phí liên lạc', ico:'📱'},
+  {name:'Tiền nhà', ico:'🏠'}
+];
+function buildCats(){
+  const csvCats = Array.from(new Set(DATA.map(x=>x.category).filter(Boolean))).map(n=>({name:n, ico:'📁'}));
+  const catDict = {};
+  [...defaultCats, ...csvCats].forEach(c=>{ if(!catDict[c.name]) catDict[c.name]=c; });
+  return Object.values(catDict);
+}
+let CATS = buildCats();
 
-let calYear,calMonth;
-function setMonth(y,m){calYear=y;calMonth=m;$('#monthPicker').value=y+'-'+String(m+1).padStart(2,'0');renderCalendar()}
-function monthInfo(y,m){const first=new Date(y,m,1);const last=new Date(y,m+1,0);return {days:last.getDate(),firstDOW:(first.getDay()+6)%7}}
-function renderCalendar(){const {days,firstDOW}=monthInfo(calYear,calMonth);$('#calTitle').textContent=String(calMonth+1).padStart(2,'0')+'/'+calYear;$('#calRange').textContent='(01–'+String(days).padStart(2,'0')+')';
-  const grid=$('#calendarGrid');grid.innerHTML='';const rs=rows();const prevDays=new Date(calYear,calMonth,0).getDate();const totalCells=42;let day=1,next=1;const fmt=(y,m,d)=> y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-  for(let i=0;i<totalCells;i++){const cell=document.createElement('div');cell.className='day';let shown,inMonth=true,dnum;
-    if(i<firstDOW){inMonth=false;const pm=calMonth-1<0?11:calMonth-1;const py=calMonth-1<0?calYear-1:calYear;dnum=prevDays-firstDOW+i+1;shown=fmt(py,pm,dnum)}
-    else if(day<=days){dnum=day++;shown=fmt(calYear,calMonth,dnum)}
-    else {inMonth=false;const nm=(calMonth+1)%12;const ny=calMonth+1>11?calYear+1:calYear;dnum=next++;shown=fmt(ny,nm,dnum)}
-    if(!inMonth)cell.classList.add('other');let inc=0,exp=0;rs.forEach(r=>{if(r.date===shown){if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)}});
-    cell.innerHTML=`<h4>${dnum}</h4><div class="dmoney"><span class="inc">${inc?inc.toLocaleString('vi-VN'):''}</span><span class="exp">${exp?exp.toLocaleString('vi-VN'):''}</span></div>`;
-    cell.onclick=()=>showDayDetail(shown);grid.appendChild(cell)}
-  let mInc=0,mExp=0;rs.forEach(r=>{const [y,m]=r.date.split('-').map(Number);if(y===calYear&&m===calMonth+1){if(r.type==='income')mInc+=Number(r.amount||0);else mExp+=Number(r.amount||0)}});
-  $('#mIncome').textContent='+'+mInc.toLocaleString('vi-VN')+'đ';$('#mExpense').textContent='-'+mExp.toLocaleString('vi-VN')+'đ';const net=mInc-mExp;$('#mNet').textContent=(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ'}
-function showDayDetail(dateStr){$('#detailDate').textContent=dateStr;const body=$('#detailBody');body.innerHTML='';rows().filter(r=>r.date===dateStr).forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><span class="pill ${r.type==='income'?'income':'expense'}">${r.type==='income'?'Thu':'Chi'}</span></td><td>${r.category||''}</td><td>${r.note||''}</td><td class="right">${money(r.amount)}</td>`;body.appendChild(tr)})}
-$('#prevMonth').onclick=()=>{const m=calMonth-1;if(m<0){calMonth=11;calYear--}else calMonth=m;renderCalendar()};
-$('#nextMonth').onclick=()=>{const m=calMonth+1;if(m>11){calMonth=0;calYear++}else calMonth=m;renderCalendar()};
-$('#monthPicker').addEventListener('change',e=>{const [y,m]=e.target.value.split('-');setMonth(Number(y),Number(m)-1)});
+const tbody = document.querySelector('#tbl tbody');
+const fromDate = document.getElementById('fromDate');
+const toDate = document.getElementById('toDate');
+const typeSel = document.getElementById('typeSel');
+const catSel = document.getElementById('catSel');
+const search = document.getElementById('search');
+const sumIncome = document.getElementById('sumIncome');
+const sumExpense = document.getElementById('sumExpense');
+const sumNet = document.getElementById('sumNet');
 
-let repMode='monthly',repType='expense';
-function palette(i){const P=['#60a5fa','#34d399','#fbbf24','#f87171','#a78bfa','#f472b6','#22d3ee','#fb923c','#4ade80','#c084fc'];return P[i%P.length]}
-function drawDonut(values){const canvas=$('#donut'),ctx=canvas.getContext('2d');const w=Math.min(300,Math.max(220,canvas.parentElement.clientWidth-40));canvas.width=w;canvas.height=w;ctx.clearRect(0,0,w,w);
-  const cx=w/2,cy=w/2,r=w/2-14,r2=r*0.58;const total=values.reduce((a,b)=>a+b,0)||1;let ang=-Math.PI/2;
-  values.forEach((v,i)=>{const a=(v/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,ang,ang+a);ctx.closePath();ctx.fillStyle=palette(i);ctx.fill();ang+=a});
-  ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(cx,cy,r2,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation='source-over';
-  ctx.fillStyle='#111827';ctx.textAlign='center';ctx.font='700 14px system-ui';ctx.fillText('Tổng: '+(values.reduce((a,b)=>a+b,0)).toLocaleString('vi-VN')+'đ',cx,cy+6)}
-function renderReport(){const all=rows();let filtered=[],title='';if(repMode==='monthly'){const [yy,mm]=$('#reportMonth').value.split('-');const y=Number(yy),m=Number(mm);
-    filtered=all.filter(r=>{const [ry,rm]=r.date.split('-').map(Number);return ry===y&&rm===m});title='Tổng theo ngày ('+String(mm).padStart(2,'0')+'/'+y+')';$('#sumTitle').textContent=title}
-  else{const y=Number($('#reportYear').value||new Date().getFullYear());filtered=all.filter(r=>Number(r.date.split('-')[0])===y);title='Tổng theo tháng ('+y+')';$('#sumTitle').textContent=title}
-  let inc=0,exp=0;filtered.forEach(r=>{if(r.type==='income')inc+=Number(r.amount||0);else exp+=Number(r.amount||0)});const net=inc-exp;
-  $('#rIncome').textContent=inc.toLocaleString('vi-VN')+'đ';$('#rExpense').textContent=exp.toLocaleString('vi-VN')+'đ';$('#rNet').textContent=(net>=0?'+':'-')+Math.abs(net).toLocaleString('vi-VN')+'đ';
-  const list=filtered.filter(r=>r.type===repType);const map=new Map();list.forEach(r=>map.set(r.category,(map.get(r.category)||0)+Number(r.amount||0)));const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
-  const values=arr.map(x=>x[1]);drawDonut(values);const legend=$('#legend');legend.innerHTML='';const total=values.reduce((a,b)=>a+b,0);
-  if(!arr.length){legend.innerHTML='<div class="muted">Không có dữ liệu</div>'}else{arr.forEach((e,i)=>{const d=document.createElement('div');d.className='legend-item';const pct=total?(e[1]*100/total):0;
-      d.innerHTML=`<div style="display:flex;align-items:center;gap:8px"><span class="lbox" style="background:${palette(i)}"></span><strong>${e[0]}</strong></div><div>${(e[1]).toLocaleString('vi-VN')}đ <span class="muted">(${pct.toFixed(1)}%)</span></div>`;legend.appendChild(d)})}
-  const tbody=$('#periodBody');tbody.innerHTML='';if(repMode==='monthly'){const [yy,mm]=$('#reportMonth').value.split('-');const y=Number(yy),m=Number(mm);const days=new Date(y,m,0).getDate();
-    for(let d=1;d<=days;d++){const key=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');let ti=0,te=0;filtered.forEach(r=>{if(r.date===key){if(r.type==='income')ti+=Number(r.amount||0);else te+=Number(r.amount||0)}});
-      if(ti||te){const tr=document.createElement('tr');const n=ti-te;tr.innerHTML=`<td>${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}</td>
-      <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
-      <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
-      <td class="right" style="color:${n>=0?'#059669':'#dc2626'}">${n?((n>=0?'+':'-')+Math.abs(n).toLocaleString('vi-VN')+'đ'):''}</td>`;tbody.appendChild(tr)}}}
-  else{const y=Number($('#reportYear').value||new Date().getFullYear());for(let m=1;m<=12;m++){let ti=0,te=0;filtered.forEach(r=>{const [ry,rm]=r.date.split('-').map(Number);if(rm===m){if(r.type==='income')ti+=Number(r.amount||0);else te+=Number(r.amount||0)}});
-      if(ti||te){const tr=document.createElement('tr');const n=ti-te;tr.innerHTML=`<td>Th ${m}</td>
-      <td class="right" style="color:#2563eb">${ti?ti.toLocaleString('vi-VN')+'đ':''}</td>
-      <td class="right" style="color:#dc2626">${te?te.toLocaleString('vi-VN')+'đ':''}</td>
-      <td class="right" style="color:${n>=0?'#059669':'#dc2626'}">${n?((n>=0?'+':'-')+Math.abs(n).toLocaleString('vi-VN')+'đ'):''}</td>`;tbody.appendChild(tr)}}}}
-$('#btnMonthly').onclick=()=>{repMode='monthly';$('#btnMonthly').classList.add('active');$('#btnYearly').classList.remove('active');$('#reportYear').style.display='none';$('#reportMonth').style.display='inline-block';renderReport()};
-$('#btnYearly').onclick=()=>{repMode='yearly';$('#btnYearly').classList.add('active');$('#btnMonthly').classList.remove('active');$('#reportMonth').style.display='none';$('#reportYear').style.display='inline-block';renderReport()};
-$('#btnRepExpense').onclick=()=>{repType='expense';$('#btnRepExpense').classList.add('active');$('#btnRepIncome').classList.remove('active');renderReport()};
-$('#btnRepIncome').onclick=()=>{repType='income';$('#btnRepIncome').classList.add('active');$('#btnRepExpense').classList.remove('active');renderReport()};
-$('#reportMonth').addEventListener('change',renderReport);$('#reportYear').addEventListener('change',renderReport);
+const tabExpense = document.getElementById('tabExpense');
+const tabIncome = document.getElementById('tabIncome');
+const inDate = document.getElementById('inDate');
+const inMemo = document.getElementById('inMemo');
+const inAmount = document.getElementById('inAmount');
+const btnAdd = document.getElementById('btnAdd');
+const amountLabel = document.getElementById('amountLabel');
+const catGrid = document.getElementById('catGrid');
 
-function initFilters(){updateCategoryFilter();$('#qFrom').value='';$('#qTo').value='';$('#qType').value='';$('#qText').value=''}
-$('#dateInput').value=todayStr();$('#reportMonth').value=todayStr().slice(0,7);$('#reportYear').value=new Date().getFullYear();
-renderCats();initFilters();renderTable();const d=new Date();setMonth(d.getFullYear(),d.getMonth());showDayDetail(todayStr());renderReport();
+let currentType = 'Expense';
+let selectedCat = CATS[0]?.name || '';
+
+function refreshFilterCats(){
+  const set = new Set(DATA.map(x=>x.category).filter(Boolean));
+  catSel.innerHTML = '<option value="">Danh mục: Tất cả</option>' + Array.from(set).sort((a,b)=>a.localeCompare(b,'vi')).map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+function renderCatGrid(){
+  catGrid.innerHTML = '';
+  CATS.forEach(c=>{
+    const div = document.createElement('div');
+    div.className = 'cat'+(c.name===selectedCat?' active':'');
+    div.innerHTML = `<div class="ico">${c.ico||'📁'}</div><div>${c.name}</div>`;
+    div.addEventListener('click', ()=>{ selectedCat=c.name; renderCatGrid(); });
+    catGrid.appendChild(div);
+  });
+  const edit = document.createElement('div');
+  edit.className='cat';
+  edit.innerHTML = `<div class="ico">✏️</div><div>Chỉnh sửa</div>`;
+  edit.addEventListener('click', ()=>{
+    const name = prompt('Thêm danh mục mới:');
+    if(name && !CATS.find(x=>x.name===name)){
+      CATS.push({name, ico:'📁'});
+      selectedCat = name;
+      renderCatGrid();
+      refreshFilterCats();
+    }
+  });
+  catGrid.appendChild(edit);
+}
+
+function applyFilter(){
+  const a = fromDate.value ? new Date(fromDate.value+'T00:00:00') : null;
+  const b = toDate.value ? new Date(toDate.value+'T23:59:59') : null;
+  const t = typeSel.value;
+  const q = (search.value||'').toLowerCase().trim();
+
+  let rows = DATA.filter(x=> inRange(x.date, a, b));
+  if(t) rows = rows.filter(x=> x.type===t);
+  if(catSel.value) rows = rows.filter(x=> x.category===catSel.value);
+  if(q) rows = rows.filter(x=> (x.memo+' '+x.category).toLowerCase().includes(q));
+
+  const income = rows.filter(x=>x.type==='Income').reduce((s,x)=>s+x.amount,0);
+  const expense = rows.filter(x=>x.type==='Expense').reduce((s,x)=>s+x.amount,0);
+  sumIncome.textContent = fmtMoney(income);
+  sumExpense.textContent = fmtMoney(expense);
+  sumNet.textContent = fmtMoney(income - expense);
+
+  tbody.innerHTML = rows.sort((a,b)=> b.date - a.date).map((x)=>{
+    const typePill = x.type==='Income' ? '<span class="type-pill type-income">Thu</span>' : '<span class="type-pill type-expense">Chi</span>';
+    const canEdit = x.src==='local';
+    return `<tr>
+      <td>${x.dateStr}</td>
+      <td>${typePill}</td>
+      <td>${x.category||''}</td>
+      <td>${(x.memo||'').replace(/</g,'&lt;')}</td>
+      <td style="text-align:right;font-variant-numeric:tabular-nums">${fmtMoney(x.amount)}</td>
+      <td>${canEdit ? '<div class="row-actions"><button data-act="edit" data-id="'+(x._id||'')+'">Sửa</button><button class="danger" data-act="del" data-id="'+(x._id||'')+'">Xóa</button></div>' : ''}</td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('button[data-act]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.getAttribute('data-id');
+      if(b.getAttribute('data-act')==='del'){
+        const ok = confirm('Xóa khoản này?');
+        if(!ok) return;
+        const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]').filter(r=> r._id!==id);
+        localStorage.setItem(LS_KEY, JSON.stringify(arr));
+        DATA = DATA.filter(r=> r._id!==id);
+        applyFilter();
+      }else if(b.getAttribute('data-act')==='edit'){
+        const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+        const idx = arr.findIndex(r=> r._id===id);
+        if(idx<0) return;
+        const r = arr[idx];
+        const memo = prompt('Ghi chú:', r.memo||'');
+        if(memo===null) return;
+        const amount = parseFloat(prompt('Số tiền:', r.amount)||r.amount)||0;
+        arr[idx].memo = memo; arr[idx].amount = amount;
+        localStorage.setItem(LS_KEY, JSON.stringify(arr));
+        const dIdx = DATA.findIndex(x=>x._id===id);
+        if(dIdx>=0){ DATA[dIdx].memo=memo; DATA[dIdx].amount=amount; }
+        applyFilter();
+      }
+    });
+  });
+}
+
+function setQuick(range){
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if(range==='today'){
+    fromDate.value = toDate.value = toDateInput(today);
+  }else if(range==='week'){
+    const first = new Date(today); first.setDate(first.getDate() - ((first.getDay()+6)%7));
+    const last = new Date(first); last.setDate(first.getDate()+6);
+    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
+  }else if(range==='month'){
+    const first = new Date(today.getFullYear(), today.getMonth(), 1);
+    const last = new Date(today.getFullYear(), today.getMonth()+1, 0);
+    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
+  }else if(range==='year'){
+    const first = new Date(today.getFullYear(), 0, 1);
+    const last = new Date(today.getFullYear(), 11, 31);
+    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
+  }else if(range==='all'){
+    const dates = DATA.map(x=>x.date).sort((a,b)=>a-b);
+    if(dates.length){ fromDate.value = toDateInput(dates[0]); toDate.value = toDateInput(dates[dates.length-1]); }
+    else{ fromDate.value=''; toDate.value=''; }
+  }
+  applyFilter();
+}
+
+function exportCSV(){
+  const a = fromDate.value ? new Date(fromDate.value+'T00:00:00') : null;
+  const b = toDate.value ? new Date(toDate.value+'T23:59:59') : null;
+  const t = typeSel.value;
+  const q = (search.value||'').toLowerCase().trim();
+  let rows = DATA.filter(x=> inRange(x.date, a, b));
+  if(t) rows = rows.filter(x=> x.type===t);
+  if(catSel.value) rows = rows.filter(x=> x.category===catSel.value);
+  if(q) rows = rows.filter(x=> (x.memo+' '+x.category).toLowerCase().includes(q));
+
+  const header = ['inputDate',' amount(dong)',' memo',' type',' categoryName'];
+  const body = rows.map(r=>[r.dateStr, r.amount, r.memo, r.type, r.category]);
+  const esc = (v)=> { const s = String(v==null?'':v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; };
+  const csv = [header.join(','), ...body.map(r=>r.map(esc).join(','))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const aEl = document.createElement('a');
+  aEl.href = url; aEl.download = 'so_thu_chi_loc.csv';
+  document.body.appendChild(aEl);
+  aEl.click();
+  URL.revokeObjectURL(url);
+  aEl.remove();
+}
+
+function setMobileClass(){ document.body.classList.toggle('mobile', window.innerWidth < 768); }
+
+function setType(t){
+  currentType = t;
+  tabExpense.classList.toggle('active', t==='Expense');
+  tabIncome.classList.toggle('active', t==='Income');
+  amountLabel.textContent = (t==='Expense' ? 'Tiền chi' : 'Tiền thu');
+  btnAdd.textContent = (t==='Expense' ? 'Nhập khoản chi' : 'Nhập khoản thu');
+}
+
+tabExpense.addEventListener('click', ()=> setType('Expense'));
+tabIncome.addEventListener('click', ()=> setType('Income'));
+
+function addRecord(){
+  const dateInput = inDate.value || toDateInput(new Date());
+  const memo = (inMemo.value||'').trim();
+  const amount = Math.abs(parseFloat(inAmount.value||'0')||0);
+  if(!amount){ alert('Vui lòng nhập số tiền > 0'); return; }
+  const cat = selectedCat || '';
+
+  const rec = {
+    _id: 'L'+Date.now()+Math.random().toString(36).slice(2,6),
+    dateInput,
+    dateStr: dateInput.replace(/-/g,'/'),
+    type: currentType,
+    category: cat,
+    memo,
+    amount,
+    src: 'local'
+  };
+  const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+  arr.push(rec);
+  localStorage.setItem(LS_KEY, JSON.stringify(arr));
+
+  const d = {...rec, date: fromDateInput(rec.dateInput)};
+  DATA.push(d);
+
+  selectedCat && !CATS.find(c=>c.name===selectedCat) && CATS.push({name:selectedCat, ico:'📁'});
+  refreshFilterCats();
+  inAmount.value='';
+  inMemo.value='';
+  applyFilter();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+btnAdd.addEventListener('click', addRecord);
+
+document.querySelectorAll('.quick button').forEach(b=> b.addEventListener('click', ()=> setQuick(b.dataset.q)));
+[fromDate, toDate, typeSel, catSel, search].forEach(el=> el.addEventListener('input', applyFilter));
+document.getElementById('btnExport').addEventListener('click', exportCSV);
+window.addEventListener('resize', setMobileClass);
+
+// Import CSV
+const btnImport = document.getElementById('btnImport');
+const fileCSV = document.getElementById('fileCSV');
+btnImport.addEventListener('click', ()=> fileCSV.click());
+fileCSV.addEventListener('change', async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const text = await file.text();
+  const RAW = parseCSV(text.trim());
+  if(RAW.length<2){ alert('CSV không hợp lệ hoặc rỗng.'); return; }
+  const header = RAW.shift();
+  const names = header.map(h=>h.trim());
+  const required = ['inputDate',' amount(dong)',' memo',' type',' categoryName'];
+  const ok = required.every(n=> names.includes(n));
+  if(!ok){
+    alert('CSV không đúng định dạng yêu cầu. Cần các cột: '+required.join(', '));
+    return;
+  }
+  const imported = rowsToObjects(RAW, header);
+  const mode = confirm('OK = Thay thế dữ liệu gốc bằng CSV mới (giữ khoản local).\nCancel = Gộp thêm CSV vào dữ liệu hiện tại.');
+  if(mode){
+    const locals = DATA.filter(x=>x.src==='local');
+    DATA = imported.concat(locals);
+  }else{
+    DATA = DATA.concat(imported);
+  }
+  CATS = buildCats();
+  refreshFilterCats();
+  renderCatGrid();
+  setQuick('month');
+  e.target.value = '';
+});
+
+setMobileClass();
+(function initInputs(){
+  const today = new Date();
+  document.getElementById('inDate').value = toDateInput(today);
+  refreshFilterCats();
+  renderCatGrid();
+  setType('Expense');
+  setQuick('month');
+})();
 </script>
 </body>
 </html>
