@@ -2,63 +2,74 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sổ Thu Chi - Web App (Nhập & Báo cáo)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sổ Thu Chi — TTM (Nhập • Báo cáo)</title>
 <style>
-  :root{
-    --bg:#ffffff; --fg:#0f172a; --muted:#64748b;
-    --accent:#f59e0b; --accent2:#2563eb;
-    --green:#16a34a; --red:#dc2626;
-    --card:#f8fafc; --border:#e2e8f0;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:5}
-  .wrap{max-width:1100px;margin:0 auto;padding:14px}
-  h1{font-size:18px;margin:0 0 10px}
-  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .toolbar .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  input,select,button,textarea{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#fff;color:var(--fg)}
-  button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
-  button.ghost{background:#fff}
-  .quick button{border-radius:20px;padding:6px 10px}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-  .card h3{margin:0 0 6px;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-  .value{font-size:20px;font-weight:700}
-  .value.green{color:var(--green)}
-  .value.red{color:var(--red)}
-  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-  thead th{position:sticky;top:56px;background:#fafafa;border-bottom:1px solid var(--border);padding:10px;text-align:left;font-size:12px;color:var(--muted)}
-  tbody td{border-bottom:1px solid var(--border);padding:10px;vertical-align:top}
-  tbody tr:hover td{background:#f9fafb}
-  .type-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
-  .type-income{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
-  .type-expense{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
-  .table-wrap{overflow:auto;border-radius:12px}
-  footer{padding:24px;color:var(--muted)}
-  .mobile .cards{grid-template-columns:1fr}
-  .mobile thead th{top:98px}
-  .hint{color:var(--muted);font-size:12px}
+:root{
+  --bg:#fff; --fg:#0f172a; --muted:#64748b;
+  --accent:#f59e0b; --accent2:#2563eb;
+  --green:#16a34a; --red:#dc2626;
+  --card:#f8fafc; --border:#e2e8f0;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:6}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+h1{font-size:18px;margin:0 0 8px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+input,select,button,textarea{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#fff;color:#111}
+button.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:700}
+button.ghost{background:#fff}
+.quick button{border-radius:20px;padding:6px 10px}
+.table-wrap{overflow:auto;border-radius:12px;margin:12px 0 80px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+thead th{position:sticky;top:56px;background:#fafafa;border-bottom:1px solid var(--border);padding:10px;text-align:left;font-size:12px;color:var(--muted)}
+tbody td{border-bottom:1px solid var(--border);padding:10px;vertical-align:top}
+tbody tr:hover td{background:#f9fafb}
+.type-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
+.type-income{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+.type-expense{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
+.row-actions{display:flex;gap:8px} .danger{color:var(--red);cursor:pointer}
+.sep{width:1px;height:24px;background:var(--border)}
+.hint{color:var(--muted);font-size:12px}
 
-  .entry{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border)}
-  .tabs{display:flex;gap:8px;margin-bottom:12px}
-  .tab{flex:0 0 auto;padding:10px 14px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:600}
-  .tab.active{background:#fff7ed;border-color:#fed7aa;color:#b45309}
-  .tab.income.active{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
-  .field{display:flex;align-items:center;gap:10px;margin:8px 0}
-  .field label{min-width:70px;color:#475569}
-  .amount{font-size:16px;font-weight:700}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .cat{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;cursor:pointer}
-  .cat.active{outline:2px solid #ffd28a;background:#fffaf0}
-  .cat .ico{font-size:20px;width:22px;text-align:center}
-  .bigButton{display:block;width:100%;padding:16px 18px;border-radius:999px;border:none;background:var(--accent);color:#111;font-weight:800;font-size:16px;cursor:pointer;margin:14px 0}
-  .subnav{display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid var(--border);color:#64748b}
-  .subnav .item{display:flex;flex-direction:column;align-items:center;font-size:12px;gap:4px;padding:6px 8px}
-  .danger{color:var(--red);cursor:pointer}
-  .row-actions{display:flex;gap:8px}
-  .sep{width:1px;height:24px;background:var(--border)}
+/* Bottom nav */
+.navbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);z-index:7}
+.navbar .bar{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.navbtn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;color:#475569;cursor:pointer}
+.navbtn.active{color:#111;font-weight:700}
+
+/* Views */
+.view{display:none}
+.view.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.value{font-size:20px;font-weight:700}
+.value.green{color:var(--green)} .value.red{color:var(--red)}
+
+/* Entry sheet (shows only on Nhập vào) */
+.entry{position:sticky;bottom:56px;background:#fff;border-top:1px solid var(--border);z-index:5}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{padding:10px 14px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:600}
+.tab.active{background:#fff7ed;border-color:#fed7aa;color:#b45309}
+.tab.income.active{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
+.field{display:flex;align-items:center;gap:10px;margin:8px 0} .field label{min-width:70px;color:#475569}
+.amount{font-size:16px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cat{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;cursor:pointer}
+.cat.active{outline:2px solid #ffd28a;background:#fffaf0} .cat .ico{font-size:20px;width:22px;text-align:center}
+.bigButton{display:block;width:100%;padding:16px 18px;border-radius:999px;border:none;background:var(--accent);color:#111;font-weight:800;font-size:16px;cursor:pointer;margin:14px 0}
+
+/* Report tables */
+.kv{display:grid;grid-template-columns:160px 1fr;gap:8px;align-items:center;margin:6px 0}
+.kv .k{color:#64748b}
+.sumrow{display:flex;gap:12px;flex-wrap:wrap}
+.sumrow .card{flex:1;min-width:180px}
+
+@media (max-width:768px){
+  .cards{grid-template-columns:1fr}
+  .table-wrap{margin-bottom:110px}
+}
 </style>
 </head>
 <body>
@@ -95,34 +106,17 @@
         <input id="fileCSV" type="file" accept=".csv,text/csv" style="display:none" />
       </div>
     </div>
-    <div class="cards">
-      <div class="card">
-        <h3>Tổng Thu</h3>
-        <div id="sumIncome" class="value green">0</div>
-      </div>
-      <div class="card">
-        <h3>Tổng Chi</h3>
-        <div id="sumExpense" class="value red">0</div>
-      </div>
-      <div class="card">
-        <h3>Chênh lệch</h3>
-        <div id="sumNet" class="value">0</div>
-      </div>
-    </div>
   </div>
 </header>
 
-<main class="wrap">
+<!-- View: danh sách + lọc -->
+<main id="view-list" class="wrap view active">
   <div class="table-wrap">
     <table id="tbl">
       <thead>
         <tr>
-          <th>Ngày</th>
-          <th>Loại</th>
-          <th>Danh mục</th>
-          <th>Ghi chú</th>
-          <th style="text-align:right">Số tiền (đ)</th>
-          <th>Thao tác</th>
+          <th>Ngày</th><th>Loại</th><th>Danh mục</th><th>Ghi chú</th>
+          <th style="text-align:right">Số tiền (đ)</th><th>Thao tác</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -130,43 +124,79 @@
   </div>
 </main>
 
-<section class="entry">
+<!-- View: Báo cáo -->
+<section id="view-report" class="wrap view">
+  <h2 style="margin:8px 0 4px;font-size:16px">Báo cáo</h2>
+  <div class="sumrow">
+    <div class="card">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Tổng Thu</div>
+      <div id="repIncome" class="value green">0</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Tổng Chi</div>
+      <div id="repExpense" class="value red">0</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Chênh lệch</div>
+      <div id="repNet" class="value">0</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin:0 0 8px;font-size:14px">Tổng theo danh mục</h3>
+    <div id="catSummary"></div>
+  </div>
+</section>
+
+<!-- View: Lịch (placeholder) -->
+<section id="view-calendar" class="wrap view">
+  <h2 style="margin:8px 0 4px;font-size:16px">Lịch</h2>
+  <p class="hint">Sẽ thêm lịch tháng đơn giản (nhấp vào ngày để lọc) nếu bạn cần.</p>
+</section>
+
+<!-- View: Khác -->
+<section id="view-more" class="wrap view">
+  <h2 style="margin:8px 0 4px;font-size:16px">Khác</h2>
+  <button id="btnClearLocal" class="danger" style="border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff">Xóa toàn bộ khoản nhập tay (local)</button>
+  <p class="hint">Khôi phục về dữ liệu từ CSV (hoặc CSV đã nhập).</p>
+</section>
+
+<!-- Entry sheet (chỉ hiện khi tab 'Nhập vào' được chọn) -->
+<section id="entrySheet" class="entry view">
   <div class="wrap">
     <div class="tabs">
       <div id="tabExpense" class="tab active">Tiền chi</div>
       <div id="tabIncome" class="tab income">Tiền thu</div>
     </div>
-
     <div class="field">
-      <label>Ngày</label>
-      <input id="inDate" type="date" />
+      <label>Ngày</label><input id="inDate" type="date" />
     </div>
     <div class="field">
-      <label>Ghi chú</label>
-      <input id="inMemo" type="text" placeholder="Chưa nhập vào" />
+      <label>Ghi chú</label><input id="inMemo" type="text" placeholder="Chưa nhập vào" />
     </div>
     <div class="field">
       <label id="amountLabel">Tiền chi</label>
-      <input id="inAmount" class="amount" type="number" step="1" min="0" inputmode="numeric" placeholder="0" />
-      <div>đ</div>
+      <input id="inAmount" class="amount" type="number" step="1" min="0" inputmode="numeric" placeholder="0" /><div>đ</div>
     </div>
-
     <div class="field"><label>Danh mục</label></div>
     <div id="catGrid" class="grid"></div>
-
     <button id="btnAdd" class="bigButton">Nhập khoản chi</button>
-  </div>
-  <div class="subnav">
-    <div class="item">📝 <span>Nhập vào</span></div>
-    <div class="item">📅 <span>Lịch</span></div>
-    <div class="item">📊 <span>Báo cáo</span></div>
-    <div class="item">⋯ <span>Khác</span></div>
   </div>
 </section>
 
-<footer class="wrap">
-  <div class="hint">CSV gốc + CSV nhập thêm đều xử lý cục bộ; khoản mới nhập tay lưu ở localStorage.</div>
+<footer class="wrap" style="padding-bottom:90px">
+  <div class="hint">CSV gốc + CSV nhập: xử lý cục bộ. Khoản mới: lưu localStorage.</div>
 </footer>
+
+<!-- Bottom Nav -->
+<nav class="navbar">
+  <div class="bar">
+    <div class="navbtn active" data-view="list">🗂️ <div>Danh sách</div></div>
+    <div class="navbtn" data-view="entry">📝 <div>Nhập vào</div></div>
+    <div class="navbtn" data-view="report">📊 <div>Báo cáo</div></div>
+    <div class="navbtn" data-view="more">⋯ <div>Khác</div></div>
+  </div>
+</nav>
 
 <script id="csvData" type="text/plain">inputDate, amount(dong), memo, type, categoryId, categoryName, categoryIcon, categoryColor, categoryIndex, fixedCostSettingId, fixedCostSettingStartDate, fixedCostSettingEndDate, fixedCostSettingFrequency, fixedCostSettingLastInsertedToDailyData, dayOffOption
 2025/4/28,0,,Expense,-1,Không có,categoryNashi,505050,-1,,,,,,
@@ -585,35 +615,19 @@
 </script>
 
 <script>
-const fmtMoney = (n) => { try{ return (n||0).toLocaleString('vi-VN'); }catch(e){ return String(n) } };
+// ===== Utils =====
+const fmtMoney = (n)=>{ try{ return (n||0).toLocaleString('vi-VN'); }catch(_){ return String(n) } };
 const pad = (n)=> (n<10?'0':'')+n;
-const parseYMD = (s)=>{ if(!s) return null; const p = s.trim().split('/'); if(p.length<3) return null; const y = +p[0], m = +p[1]-1, d = +p[2]; const dt = new Date(y, m, d); return isNaN(dt.getTime())?null:dt; };
-const toDateInput = (dt)=> dt? dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate()) : '';
-const fromDateInput = (s)=>{ if(!s) return null; const p=s.split('-'); if(p.length<3) return null; return new Date(+p[0], +p[1]-1, +p[2]); };
-const inRange = (d, a, b)=>{ if(!d) return false; if(a && d < a) return false; if(b && d > b) return false; return true; };
+const parseYMD = (s)=>{ if(!s) return null; const p=s.trim().split('/'); if(p.length<3) return null; const y=+p[0],m=+p[1]-1,d=+p[2]; const dt=new Date(y,m,d); return isNaN(dt.getTime())?null:dt; };
+const toDateInput = (dt)=> dt? dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate()):'';
+const fromDateInput = (s)=>{ if(!s) return null; const p=s.split('-'); if(p.length<3) return null; return new Date(+p[0],+p[1]-1,+p[2]); };
+const inRange = (d,a,b)=>{ if(!d) return false; if(a && d<a) return false; if(b && d>b) return false; return true; };
 
-function parseCSV(text) { 
-  const rows = []; let i=0, field='', row=[], inQuotes=false;
-  while(i<text.length){
-    const c = text[i];
-    if(inQuotes){
-      if(c==='"'){ if(text[i+1]==='"'){ field+='"'; i++; } else inQuotes=false; }
-      else{ field += c; }
-    }else{
-      if(c==='"'){ inQuotes=true; }
-      else if(c===','){ row.push(field); field=''; }
-      else if(c==='\n' || c==='\r'){ if(field!=='' || row.length>0){ row.push(field); rows.push(row); row=[]; field=''; } if(c==='\r' && text[i+1]==='\n') i++; }
-      else{ field += c; }
-    }
-    i++;
-  }
-  if(field!=='' || row.length>0){ row.push(field); rows.push(row); }
-  return rows;
-}
+function parseCSV(text){ const rows=[]; let i=0,field='',row=[],inQ=false; while(i<text.length){ const c=text[i]; if(inQ){ if(c==='"'){ if(text[i+1]==='"'){ field+='"'; i++; } else inQ=false; } else field+=c; } else { if(c==='"') inQ=true; else if(c===','){ row.push(field); field=''; } else if(c==='\n'||c==='\r'){ if(field!==''||row.length>0){ row.push(field); rows.push(row); row=[]; field=''; } if(c==='\r' && text[i+1]==='\n') i++; } else field+=c; } i++; } if(field!==''||row.length>0){ row.push(field); rows.push(row); } return rows; }
 
 const RAW0 = parseCSV(document.getElementById('csvData').textContent.trim());
 const header0 = RAW0.shift();
-const colIndex = (header,name)=> header.findIndex(h => h.trim()===name);
+const colIndex = (header,name)=> header.findIndex(h=>h.trim()===name);
 
 function rowsToObjects(RAW, header){
   const IDX = { 
@@ -633,108 +647,76 @@ function rowsToObjects(RAW, header){
       category: (r[IDX.catName]||'').trim(),
       memo: (r[IDX.memo]||'').trim(),
       amount,
-      src: 'csv'
+      src:'csv'
     };
   }).filter(x=>x.date);
 }
 
 let DATA = rowsToObjects(RAW0, header0);
 
-const LS_KEY = 'ttm_money_local_rows_v1';
-const localRows = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
-localRows.forEach(x=>{ x.date = fromDateInput(x.dateInput); x.dateStr = x.dateInput.replace(/-/g,'/'); x.src='local'; });
-DATA = DATA.concat(localRows);
+// Merge local
+const LS_KEY='ttm_money_local_rows_v1';
+const locals = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
+locals.forEach(x=>{ x.date=fromDateInput(x.dateInput); x.dateStr=x.dateInput.replace(/-/g,'/'); x.src='local'; });
+DATA = DATA.concat(locals);
 
-const defaultCats = [
-  {name:'Ăn uống', ico:'🍽️'},
-  {name:'Chi tiêu hàng ngày', ico:'🛍️'},
-  {name:'Quần áo', ico:'👕'},
-  {name:'Mỹ phẩm', ico:'💄'},
-  {name:'Phí giao lưu', ico:'🥂'},
-  {name:'Y tế', ico:'💊'},
-  {name:'Giáo dục', ico:'📚'},
-  {name:'Tiền điện', ico:'💡'},
-  {name:'Đi lại', ico:'🚆'},
-  {name:'Phí liên lạc', ico:'📱'},
-  {name:'Tiền nhà', ico:'🏠'}
+// Build categories
+const defaultCats=[
+  {name:'Ăn uống',ico:'🍽️'},{name:'Chi tiêu hàng ngày',ico:'🛍️'},{name:'Quần áo',ico:'👕'},
+  {name:'Mỹ phẩm',ico:'💄'},{name:'Phí giao lưu',ico:'🥂'},{name:'Y tế',ico:'💊'},
+  {name:'Giáo dục',ico:'📚'},{name:'Tiền điện',ico:'💡'},{name:'Đi lại',ico:'🚆'},
+  {name:'Phí liên lạc',ico:'📱'},{name:'Tiền nhà',ico:'🏠'}
 ];
 function buildCats(){
-  const csvCats = Array.from(new Set(DATA.map(x=>x.category).filter(Boolean))).map(n=>({name:n, ico:'📁'}));
-  const catDict = {};
-  [...defaultCats, ...csvCats].forEach(c=>{ if(!catDict[c.name]) catDict[c.name]=c; });
-  return Object.values(catDict);
+  const csvCats = Array.from(new Set(DATA.map(x=>x.category).filter(Boolean))).map(n=>({name:n,ico:'📁'}));
+  const dict={}; [...defaultCats,...csvCats].forEach(c=>{ if(!dict[c.name]) dict[c.name]=c; });
+  return Object.values(dict);
 }
 let CATS = buildCats();
 
+// ====== UI refs ======
 const tbody = document.querySelector('#tbl tbody');
 const fromDate = document.getElementById('fromDate');
 const toDate = document.getElementById('toDate');
 const typeSel = document.getElementById('typeSel');
 const catSel = document.getElementById('catSel');
 const search = document.getElementById('search');
-const sumIncome = document.getElementById('sumIncome');
-const sumExpense = document.getElementById('sumExpense');
-const sumNet = document.getElementById('sumNet');
 
-const tabExpense = document.getElementById('tabExpense');
-const tabIncome = document.getElementById('tabIncome');
-const inDate = document.getElementById('inDate');
-const inMemo = document.getElementById('inMemo');
-const inAmount = document.getElementById('inAmount');
-const btnAdd = document.getElementById('btnAdd');
-const amountLabel = document.getElementById('amountLabel');
-const catGrid = document.getElementById('catGrid');
+const tabExpense=document.getElementById('tabExpense');
+const tabIncome=document.getElementById('tabIncome');
+const inDate=document.getElementById('inDate');
+const inMemo=document.getElementById('inMemo');
+const inAmount=document.getElementById('inAmount');
+const btnAdd=document.getElementById('btnAdd');
+const amountLabel=document.getElementById('amountLabel');
+const catGrid=document.getElementById('catGrid');
+let currentType='Expense';
+let selectedCat=CATS[0]?.name||'';
 
-let currentType = 'Expense';
-let selectedCat = CATS[0]?.name || '';
-
+// ====== Filter + Render ======
 function refreshFilterCats(){
-  const set = new Set(DATA.map(x=>x.category).filter(Boolean));
-  catSel.innerHTML = '<option value="">Danh mục: Tất cả</option>' + Array.from(set).sort((a,b)=>a.localeCompare(b,'vi')).map(c=>`<option value="${c}">${c}</option>`).join('');
+  const set=new Set(DATA.map(x=>x.category).filter(Boolean));
+  catSel.innerHTML='<option value="">Danh mục: Tất cả</option>'+Array.from(set).sort((a,b)=>a.localeCompare(b,'vi')).map(c=>`<option value="${c}">${c}</option>`).join('');
 }
 
-function renderCatGrid(){
-  catGrid.innerHTML = '';
-  CATS.forEach(c=>{
-    const div = document.createElement('div');
-    div.className = 'cat'+(c.name===selectedCat?' active':'');
-    div.innerHTML = `<div class="ico">${c.ico||'📁'}</div><div>${c.name}</div>`;
-    div.addEventListener('click', ()=>{ selectedCat=c.name; renderCatGrid(); });
-    catGrid.appendChild(div);
-  });
-  const edit = document.createElement('div');
-  edit.className='cat';
-  edit.innerHTML = `<div class="ico">✏️</div><div>Chỉnh sửa</div>`;
-  edit.addEventListener('click', ()=>{
-    const name = prompt('Thêm danh mục mới:');
-    if(name && !CATS.find(x=>x.name===name)){
-      CATS.push({name, ico:'📁'});
-      selectedCat = name;
-      renderCatGrid();
-      refreshFilterCats();
-    }
-  });
-  catGrid.appendChild(edit);
-}
-
-function applyFilter(){
-  const a = fromDate.value ? new Date(fromDate.value+'T00:00:00') : null;
-  const b = toDate.value ? new Date(toDate.value+'T23:59:59') : null;
+function renderTableAndSums(){
+  const a = fromDate.value? new Date(fromDate.value+'T00:00:00'):null;
+  const b = toDate.value? new Date(toDate.value+'T23:59:59'):null;
   const t = typeSel.value;
   const q = (search.value||'').toLowerCase().trim();
 
-  let rows = DATA.filter(x=> inRange(x.date, a, b));
-  if(t) rows = rows.filter(x=> x.type===t);
-  if(catSel.value) rows = rows.filter(x=> x.category===catSel.value);
+  let rows = DATA.filter(x=> inRange(x.date,a,b));
+  if(t) rows = rows.filter(x=>x.type===t);
+  if(catSel.value) rows = rows.filter(x=>x.category===catSel.value);
   if(q) rows = rows.filter(x=> (x.memo+' '+x.category).toLowerCase().includes(q));
 
   const income = rows.filter(x=>x.type==='Income').reduce((s,x)=>s+x.amount,0);
   const expense = rows.filter(x=>x.type==='Expense').reduce((s,x)=>s+x.amount,0);
-  sumIncome.textContent = fmtMoney(income);
-  sumExpense.textContent = fmtMoney(expense);
-  sumNet.textContent = fmtMoney(income - expense);
+  document.getElementById('repIncome').textContent = fmtMoney(income);
+  document.getElementById('repExpense').textContent = fmtMoney(expense);
+  document.getElementById('repNet').textContent = fmtMoney(income-expense);
 
-  tbody.innerHTML = rows.sort((a,b)=> b.date - a.date).map((x)=>{
+  tbody.innerHTML = rows.sort((a,b)=> b.date-a.date).map(x=>{
     const typePill = x.type==='Income' ? '<span class="type-pill type-income">Thu</span>' : '<span class="type-pill type-expense">Chi</span>';
     const canEdit = x.src==='local';
     return `<tr>
@@ -743,180 +725,142 @@ function applyFilter(){
       <td>${x.category||''}</td>
       <td>${(x.memo||'').replace(/</g,'&lt;')}</td>
       <td style="text-align:right;font-variant-numeric:tabular-nums">${fmtMoney(x.amount)}</td>
-      <td>${canEdit ? '<div class="row-actions"><button data-act="edit" data-id="'+(x._id||'')+'">Sửa</button><button class="danger" data-act="del" data-id="'+(x._id||'')+'">Xóa</button></div>' : ''}</td>
+      <td>${canEdit?'<div class="row-actions"><button data-act="edit" data-id="'+(x._id||'')+'">Sửa</button><button class="danger" data-act="del" data-id="'+(x._id||'')+'">Xóa</button></div>':''}</td>
     </tr>`;
   }).join('');
 
+  // per-category summary
+  const byCat={}; rows.forEach(r=>{ if(!byCat[r.category]) byCat[r.category]={thu:0,chi:0}; if(r.type==='Income') byCat[r.category].thu+=r.amount; else byCat[r.category].chi+=r.amount; });
+  const catDiv = document.getElementById('catSummary');
+  const cats = Object.keys(byCat).sort((a,b)=> (byCat[b].thu+byCat[b].chi) - (byCat[a].thu+byCat[a].chi));
+  catDiv.innerHTML = cats.length? '<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--border)">Danh mục</th><th style="text-align:right;padding:8px;border-bottom:1px solid var(--border)">Thu</th><th style="text-align:right;padding:8px;border-bottom:1px solid var(--border)">Chi</th><th style="text-align:right;padding:8px;border-bottom:1px solid var(--border)">Net</th></tr></thead><tbody>'+
+    cats.map(c=>`<tr><td style="padding:8px;border-bottom:1px solid var(--border)">${c||'(khác)'} </td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--border)">${fmtMoney(byCat[c].thu)}</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--border)">${fmtMoney(byCat[c].chi)}</td><td style="padding:8px;text-align:right;border-bottom:1px solid var(--border)">${fmtMoney(byCat[c].thu-byCat[c].chi)}</td></tr>`).join('')
+    +'</tbody></table>' : '<div class="hint">Không có dữ liệu trong phạm vi lọc.</div>';
+
+  // wire row buttons
   tbody.querySelectorAll('button[data-act]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const id = b.getAttribute('data-id');
+    b.addEventListener('click',()=>{
+      const id=b.getAttribute('data-id');
       if(b.getAttribute('data-act')==='del'){
-        const ok = confirm('Xóa khoản này?');
-        if(!ok) return;
-        const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]').filter(r=> r._id!==id);
+        if(!confirm('Xóa khoản này?')) return;
+        const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]').filter(r=>r._id!==id);
         localStorage.setItem(LS_KEY, JSON.stringify(arr));
-        DATA = DATA.filter(r=> r._id!==id);
-        applyFilter();
-      }else if(b.getAttribute('data-act')==='edit'){
+        DATA = DATA.filter(r=>r._id!==id);
+        renderTableAndSums();
+      } else {
         const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
-        const idx = arr.findIndex(r=> r._id===id);
-        if(idx<0) return;
-        const r = arr[idx];
-        const memo = prompt('Ghi chú:', r.memo||'');
+        const i = arr.findIndex(r=>r._id===id);
+        if(i<0) return;
+        const memo = prompt('Ghi chú:', arr[i].memo||'');
         if(memo===null) return;
-        const amount = parseFloat(prompt('Số tiền:', r.amount)||r.amount)||0;
-        arr[idx].memo = memo; arr[idx].amount = amount;
+        const amount = parseFloat(prompt('Số tiền:', arr[i].amount)||arr[i].amount)||0;
+        arr[i].memo=memo; arr[i].amount=amount;
         localStorage.setItem(LS_KEY, JSON.stringify(arr));
-        const dIdx = DATA.findIndex(x=>x._id===id);
-        if(dIdx>=0){ DATA[dIdx].memo=memo; DATA[dIdx].amount=amount; }
-        applyFilter();
+        const j = DATA.findIndex(r=>r._id===id);
+        if(j>=0){ DATA[j].memo=memo; DATA[j].amount=amount; }
+        renderTableAndSums();
       }
     });
   });
 }
 
+// Quick ranges + export
 function setQuick(range){
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if(range==='today'){
-    fromDate.value = toDate.value = toDateInput(today);
-  }else if(range==='week'){
-    const first = new Date(today); first.setDate(first.getDate() - ((first.getDay()+6)%7));
-    const last = new Date(first); last.setDate(first.getDate()+6);
-    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
-  }else if(range==='month'){
-    const first = new Date(today.getFullYear(), today.getMonth(), 1);
-    const last = new Date(today.getFullYear(), today.getMonth()+1, 0);
-    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
-  }else if(range==='year'){
-    const first = new Date(today.getFullYear(), 0, 1);
-    const last = new Date(today.getFullYear(), 11, 31);
-    fromDate.value = toDateInput(first); toDate.value = toDateInput(last);
-  }else if(range==='all'){
-    const dates = DATA.map(x=>x.date).sort((a,b)=>a-b);
-    if(dates.length){ fromDate.value = toDateInput(dates[0]); toDate.value = toDateInput(dates[dates.length-1]); }
-    else{ fromDate.value=''; toDate.value=''; }
-  }
-  applyFilter();
+  const now=new Date(); const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(range==='today'){ fromDate.value=toDate.value=toDateInput(today); }
+  else if(range==='week'){ const first=new Date(today); first.setDate(first.getDate()-((first.getDay()+6)%7)); const last=new Date(first); last.setDate(first.getDate()+6); fromDate.value=toDateInput(first); toDate.value=toDateInput(last); }
+  else if(range==='month'){ const first=new Date(today.getFullYear(),today.getMonth(),1); const last=new Date(today.getFullYear(),today.getMonth()+1,0); fromDate.value=toDateInput(first); toDate.value=toDateInput(last); }
+  else if(range==='year'){ const first=new Date(today.getFullYear(),0,1); const last=new Date(today.getFullYear(),11,31); fromDate.value=toDateInput(first); toDate.value=toDateInput(last); }
+  else if(range==='all'){ const dates=DATA.map(x=>x.date).sort((a,b)=>a-b); if(dates.length){ fromDate.value=toDateInput(dates[0]); toDate.value=toDateInput(dates[dates.length-1]); } else { fromDate.value=''; toDate.value=''; } }
+  renderTableAndSums();
 }
 
 function exportCSV(){
-  const a = fromDate.value ? new Date(fromDate.value+'T00:00:00') : null;
-  const b = toDate.value ? new Date(toDate.value+'T23:59:59') : null;
-  const t = typeSel.value;
-  const q = (search.value||'').toLowerCase().trim();
-  let rows = DATA.filter(x=> inRange(x.date, a, b));
-  if(t) rows = rows.filter(x=> x.type===t);
+  const a = fromDate.value? new Date(fromDate.value+'T00:00:00'):null;
+  const b = toDate.value? new Date(toDate.value+'T23:59:59'):null;
+  const t = typeSel.value; const q=(search.value||'').toLowerCase().trim();
+  let rows = DATA.filter(x=> inRange(x.date,a,b));
+  if(t) rows = rows.filter(x=>x.type===t);
   if(catSel.value) rows = rows.filter(x=> x.category===catSel.value);
   if(q) rows = rows.filter(x=> (x.memo+' '+x.category).toLowerCase().includes(q));
-
-  const header = ['inputDate',' amount(dong)',' memo',' type',' categoryName'];
-  const body = rows.map(r=>[r.dateStr, r.amount, r.memo, r.type, r.category]);
-  const esc = (v)=> { const s = String(v==null?'':v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; };
-  const csv = [header.join(','), ...body.map(r=>r.map(esc).join(','))].join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const aEl = document.createElement('a');
-  aEl.href = url; aEl.download = 'so_thu_chi_loc.csv';
-  document.body.appendChild(aEl);
-  aEl.click();
-  URL.revokeObjectURL(url);
-  aEl.remove();
+  const header=['inputDate',' amount(dong)',' memo',' type',' categoryName'];
+  const body=rows.map(r=>[r.dateStr,r.amount,r.memo,r.type,r.category]);
+  const esc=(v)=>{ const s=String(v??''); return /[",\n]/.test(s)? '"'+s.replace(/"/g,'""')+'"': s; };
+  const csv=[header.join(','),...body.map(r=>r.map(esc).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob); const aEl=document.createElement('a');
+  aEl.href=url; aEl.download='so_thu_chi_loc.csv'; document.body.appendChild(aEl); aEl.click(); URL.revokeObjectURL(url); aEl.remove();
 }
 
-function setMobileClass(){ document.body.classList.toggle('mobile', window.innerWidth < 768); }
+// Import CSV
+document.getElementById('btnImport').addEventListener('click',()=> fileCSV.click());
+const fileCSV=document.getElementById('fileCSV');
+fileCSV.addEventListener('change', async (e)=>{
+  const file=e.target.files && e.target.files[0]; if(!file) return;
+  const text=await file.text(); const RAW=parseCSV(text.trim()); if(RAW.length<2){ alert('CSV rỗng/không hợp lệ'); return; }
+  const header=RAW.shift(); const names=header.map(h=>h.trim());
+  const required=['inputDate',' amount(dong)',' memo',' type',' categoryName'];
+  if(!required.every(n=>names.includes(n))){ alert('CSV không đúng định dạng.'); return; }
+  const imported = rowsToObjects(RAW, header);
+  const replace = confirm('OK = Thay thế dữ liệu gốc bằng CSV mới (giữ khoản local).\nCancel = Gộp thêm CSV vào dữ liệu hiện tại.');
+  if(replace){ const locals=DATA.filter(x=>x.src==='local'); DATA=imported.concat(locals); }
+  else DATA=DATA.concat(imported);
+  CATS=buildCats(); refreshFilterCats(); renderCatGrid(); setQuick('month'); e.target.value='';
+});
 
-function setType(t){
-  currentType = t;
-  tabExpense.classList.toggle('active', t==='Expense');
-  tabIncome.classList.toggle('active', t==='Income');
-  amountLabel.textContent = (t==='Expense' ? 'Tiền chi' : 'Tiền thu');
-  btnAdd.textContent = (t==='Expense' ? 'Nhập khoản chi' : 'Nhập khoản thu');
+// Entry
+function setType(t){ currentType=t; tabExpense.classList.toggle('active',t==='Expense'); tabIncome.classList.toggle('active',t==='Income'); document.getElementById('amountLabel').textContent=(t==='Expense'?'Tiền chi':'Tiền thu'); document.getElementById('btnAdd').textContent=(t==='Expense'?'Nhập khoản chi':'Nhập khoản thu'); }
+tabExpense.addEventListener('click',()=> setType('Expense'));
+tabIncome.addEventListener('click',()=> setType('Income'));
+
+function renderCatGrid(){
+  catGrid.innerHTML='';
+  CATS.forEach(c=>{ const div=document.createElement('div'); div.className='cat'+(c.name===selectedCat?' active':''); div.innerHTML=`<div class="ico">${c.ico||'📁'}</div><div>${c.name}</div>`; div.addEventListener('click',()=>{ selectedCat=c.name; renderCatGrid(); }); catGrid.appendChild(div); });
+  const edit=document.createElement('div'); edit.className='cat'; edit.innerHTML='<div class="ico">✏️</div><div>Chỉnh sửa</div>';
+  edit.addEventListener('click',()=>{ const name=prompt('Thêm danh mục mới:'); if(name && !CATS.find(x=>x.name===name)){ CATS.push({name,ico:'📁'}); selectedCat=name; renderCatGrid(); refreshFilterCats(); } });
+  catGrid.appendChild(edit);
 }
-
-tabExpense.addEventListener('click', ()=> setType('Expense'));
-tabIncome.addEventListener('click', ()=> setType('Income'));
 
 function addRecord(){
   const dateInput = inDate.value || toDateInput(new Date());
-  const memo = (inMemo.value||'').trim();
-  const amount = Math.abs(parseFloat(inAmount.value||'0')||0);
+  const memo=(inMemo.value||'').trim();
+  const amount=Math.abs(parseFloat(inAmount.value||'0')||0);
   if(!amount){ alert('Vui lòng nhập số tiền > 0'); return; }
-  const cat = selectedCat || '';
-
-  const rec = {
-    _id: 'L'+Date.now()+Math.random().toString(36).slice(2,6),
-    dateInput,
-    dateStr: dateInput.replace(/-/g,'/'),
-    type: currentType,
-    category: cat,
-    memo,
-    amount,
-    src: 'local'
-  };
-  const arr = JSON.parse(localStorage.getItem(LS_KEY)||'[]');
-  arr.push(rec);
-  localStorage.setItem(LS_KEY, JSON.stringify(arr));
-
-  const d = {...rec, date: fromDateInput(rec.dateInput)};
-  DATA.push(d);
-
-  selectedCat && !CATS.find(c=>c.name===selectedCat) && CATS.push({name:selectedCat, ico:'📁'});
-  refreshFilterCats();
-  inAmount.value='';
-  inMemo.value='';
-  applyFilter();
-  window.scrollTo({top:0, behavior:'smooth'});
+  const rec={ _id:'L'+Date.now()+Math.random().toString(36).slice(2,6), dateInput, dateStr:dateInput.replace(/-/g,'/'), type:currentType, category:selectedCat||'', memo, amount, src:'local' };
+  const arr=JSON.parse(localStorage.getItem(LS_KEY)||'[]'); arr.push(rec); localStorage.setItem(LS_KEY, JSON.stringify(arr));
+  DATA.push(Object.assign({}, rec, {date: fromDateInput(rec.dateInput)}));
+  inAmount.value=''; inMemo.value=''; renderTableAndSums(); window.scrollTo({top:0,behavior:'smooth'});
 }
-
 btnAdd.addEventListener('click', addRecord);
 
-document.querySelectorAll('.quick button').forEach(b=> b.addEventListener('click', ()=> setQuick(b.dataset.q)));
-[fromDate, toDate, typeSel, catSel, search].forEach(el=> el.addEventListener('input', applyFilter));
-document.getElementById('btnExport').addEventListener('click', exportCSV);
-window.addEventListener('resize', setMobileClass);
+// Bottom nav switching
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
+  if(name==='list') document.getElementById('view-list').classList.add('active');
+  if(name==='entry') document.getElementById('entrySheet').classList.add('active');
+  if(name==='report') document.getElementById('view-report').classList.add('active');
+  if(name==='more') document.getElementById('view-more').classList.add('active');
+  document.querySelectorAll('.navbtn').forEach(b=> b.classList.toggle('active', b.dataset.view===name));
+}
+document.querySelectorAll('.navbtn').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.view)));
 
-// Import CSV
-const btnImport = document.getElementById('btnImport');
-const fileCSV = document.getElementById('fileCSV');
-btnImport.addEventListener('click', ()=> fileCSV.click());
-fileCSV.addEventListener('change', async (e)=>{
-  const file = e.target.files && e.target.files[0];
-  if(!file) return;
-  const text = await file.text();
-  const RAW = parseCSV(text.trim());
-  if(RAW.length<2){ alert('CSV không hợp lệ hoặc rỗng.'); return; }
-  const header = RAW.shift();
-  const names = header.map(h=>h.trim());
-  const required = ['inputDate',' amount(dong)',' memo',' type',' categoryName'];
-  const ok = required.every(n=> names.includes(n));
-  if(!ok){
-    alert('CSV không đúng định dạng yêu cầu. Cần các cột: '+required.join(', '));
-    return;
-  }
-  const imported = rowsToObjects(RAW, header);
-  const mode = confirm('OK = Thay thế dữ liệu gốc bằng CSV mới (giữ khoản local).\nCancel = Gộp thêm CSV vào dữ liệu hiện tại.');
-  if(mode){
-    const locals = DATA.filter(x=>x.src==='local');
-    DATA = imported.concat(locals);
-  }else{
-    DATA = DATA.concat(imported);
-  }
-  CATS = buildCats();
-  refreshFilterCats();
-  renderCatGrid();
-  setQuick('month');
-  e.target.value = '';
+// Clear locals
+document.getElementById('btnClearLocal').addEventListener('click', ()=>{
+  if(!confirm('Xóa toàn bộ khoản nhập tay?')) return;
+  localStorage.removeItem(LS_KEY);
+  DATA = DATA.filter(r=> r.src!=='local');
+  renderTableAndSums();
 });
 
-setMobileClass();
-(function initInputs(){
-  const today = new Date();
-  document.getElementById('inDate').value = toDateInput(today);
-  refreshFilterCats();
-  renderCatGrid();
-  setType('Expense');
-  setQuick('month');
+// Wiring filter
+document.querySelectorAll('.quick button').forEach(b=> b.addEventListener('click', ()=> setQuick(b.dataset.q)));
+[fromDate,toDate,typeSel,catSel,search].forEach(el=> el.addEventListener('input', renderTableAndSums));
+document.getElementById('btnExport').addEventListener('click', exportCSV);
+
+// Init
+(function(){
+  const today=new Date(); inDate.value=toDateInput(today);
+  refreshFilterCats(); renderCatGrid(); setType('Expense'); setQuick('month'); renderTableAndSums();
 })();
 </script>
 </body>
