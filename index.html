@@ -3,73 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sổ Thu Chi — TTM (Nhập • Báo cáo)</title>
+<title>Sổ Thu Chi — TTM</title>
 <style>
-:root{
-  --bg:#fff; --fg:#0f172a; --muted:#64748b;
-  --accent:#f59e0b; --accent2:#2563eb;
-  --green:#16a34a; --red:#dc2626;
-  --card:#f8fafc; --border:#e2e8f0;
-}
+:root{ --bg:#fff; --fg:#0f172a; --muted:#64748b; --accent:#f59e0b; --green:#16a34a; --red:#dc2626; --card:#f8fafc; --border:#e2e8f0; }
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:6}
-.wrap{max-width:1100px;margin:0 auto;padding:14px}
-h1{font-size:18px;margin:0}
-
+.wrap{max-width:1100px;margin:0 auto;padding:14px} h1{font-size:18px;margin:0}
 .table-wrap{overflow:auto;border-radius:12px;margin:12px 0 88px}
 table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 thead th{position:sticky;top:50px;background:#fafafa;border-bottom:1px solid var(--border);padding:10px;text-align:left;font-size:12px;color:var(--muted)}
-tbody td{border-bottom:1px solid var(--border);padding:10px;vertical-align:top}
-tbody tr:hover td{background:#f9fafb}
+tbody td{border-bottom:1px solid var(--border);padding:10px;vertical-align:top} tbody tr:hover td{background:#f9fafb}
 .type-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
-.type-income{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
-.type-expense{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
-.row-actions{display:flex;gap:8px} .danger{color:var(--red);cursor:pointer}
+.type-income{background:#ecfdf5;color:#065f46;border-color:#a7f3d0} .type-expense{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
+.row-actions{display:flex;gap:8px} .danger{color:#dc2626;cursor:pointer}
 .hint{color:var(--muted);font-size:12px}
 
-/* Bottom nav */
 .navbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);z-index:7}
 .navbar .bar{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .navbtn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;color:#475569;cursor:pointer}
 .navbtn.active{color:#111;font-weight:700}
 
-/* Views */
-.view{display:none}
-.view.active{display:block}
+.view{display:none} .view.active{display:block}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-.value{font-size:20px;font-weight:700}
-.value.green{color:var(--green)} .value.red{color:var(--red)}
-
-/* Entry sheet */
+.value{font-size:20px;font-weight:700} .value.green{color:#16a34a} .value.red{color:#dc2626}
 .entry{position:sticky;bottom:56px;background:#fff;border-top:1px solid var(--border);z-index:5}
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tab{padding:10px 14px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:600}
-.tab.active{background:#fff7ed;border-color:#fed7aa;color:#b45309}
-.tab.income.active{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
+.tabs{display:flex;gap:8px;margin-bottom:12px} .tab{padding:10px 14px;border-radius:999px;border:1px solid var(--border);cursor:pointer;font-weight:600}
+.tab.active{background:#fff7ed;border-color:#fed7aa;color:#b45309} .tab.income.active{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
 .field{display:flex;align-items:center;gap:10px;margin:8px 0} .field label{min-width:70px;color:#475569}
-.amount{font-size:16px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.amount{font-size:16px;font-weight:700} .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .cat{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;cursor:pointer}
 .cat.active{outline:2px solid #ffd28a;background:#fffaf0} .cat .ico{font-size:20px;width:22px;text-align:center}
 .bigButton{display:block;width:100%;padding:16px 18px;border-radius:999px;border:none;background:var(--accent);color:#111;font-weight:800;font-size:16px;cursor:pointer;margin:14px 0}
 
-/* Report */
-.sumrow{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
-.sumrow .card{flex:1;min-width:180px}
-
-/* Controls in "Khác" */
+.sumrow{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0} .sumrow .card{flex:1;min-width:180px}
 .ctrl{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;align-items:center}
 .ctrl input, .ctrl select, .ctrl button{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#fff;color:#111}
-.ctrl .chip{border-radius:20px;padding:6px 10px}
-.ctrl .primary{background:var(--accent);font-weight:700}
-.sep{width:1px;height:24px;background:var(--border)}
+.ctrl .chip{border-radius:20px;padding:6px 10px} .ctrl .primary{background:var(--accent);font-weight:700} .sep{width:1px;height:24px;background:var(--border)}
 @media (max-width:768px){ .table-wrap{margin-bottom:110px} thead th{top:48px} }
 </style>
 </head>
 <body>
 <header><div class="wrap"><h1>Sổ Thu Chi (Offline) — TTM</h1></div></header>
 
-<!-- View: Danh sách -->
+<!-- Danh sách -->
 <main id="view-list" class="wrap view active">
   <div class="table-wrap">
     <table id="tbl">
@@ -82,20 +58,9 @@ tbody tr:hover td{background:#f9fafb}
   </div>
 </main>
 
-<!-- View: Báo cáo -->
+<!-- Báo cáo -->
 <section id="view-report" class="wrap view">
-  <h2 style="margin:8px 0 4px;font-size:16px">Báo cáo</h2>
-  <div class="sumrow">
-    <div class="card"><div style="font-size:12px;color:var(--muted)">Tổng Thu</div><div id="repIncome" class="value green">0</div></div>
-    <div class="card"><div style="font-size:12px;color:var(--muted)">Tổng Chi</div><div id="repExpense" class="value red">0</div></div>
-    <div class="card"><div style="font-size:12px;color:var(--muted)">Chênh lệch</div><div id="repNet" class="value">0</div></div>
-  </div>
-  <div class="card"><h3 style="margin:0 0 8px;font-size:14px">Tổng theo danh mục</h3><div id="catSummary"></div></div>
-</section>
-
-<!-- View: Khác -->
-<section id="view-more" class="wrap view">
-  <h2 style="margin:8px 0 4px;font-size:16px">Bộ lọc & Xuất/Nhập</h2>
+  <h2 style="margin:8px 0 4px;font-size:16px">Bộ lọc</h2>
   <div class="ctrl">
     <label>Từ ngày <input type="date" id="fromDate"></label>
     <label>Đến ngày <input type="date" id="toDate"></label>
@@ -113,44 +78,47 @@ tbody tr:hover td{background:#f9fafb}
       <option value="Income">Thu</option>
       <option value="Expense">Chi</option>
     </select>
-    <select id="catSel">
-      <option value="">Danh mục: Tất cả</option>
-    </select>
+    <select id="catSel"><option value="">Danh mục: Tất cả</option></select>
     <input id="search" placeholder="Tìm ghi chú / danh mục..." />
   </div>
+
+  <h2 style="margin:8px 0 4px;font-size:16px">Báo cáo</h2>
+  <div class="sumrow">
+    <div class="card"><div style="font-size:12px;color:var(--muted)">Tổng Thu</div><div id="repIncome" class="value green">0</div></div>
+    <div class="card"><div style="font-size:12px;color:var(--muted)">Tổng Chi</div><div id="repExpense" class="value red">0</div></div>
+    <div class="card"><div style="font-size:12px;color:var(--muted)">Chênh lệch</div><div id="repNet" class="value">0</div></div>
+  </div>
+  <div class="card"><h3 style="margin:0 0 8px;font-size:14px">Tổng theo danh mục</h3><div id="catSummary"></div></div>
+</section>
+
+<!-- Khác -->
+<section id="view-more" class="wrap view">
+  <h2 style="margin:8px 0 4px;font-size:16px">Xuất/Nhập CSV</h2>
   <div class="ctrl">
     <button id="btnImport">Nhập CSV</button>
     <div class="sep"></div>
     <button id="btnExport" class="primary">Xuất CSV (lọc hiện tại)</button>
     <input id="fileCSV" type="file" accept=".csv,text/csv" style="display:none" />
   </div>
-
   <h2 style="margin:16px 0 4px;font-size:16px">Khác</h2>
   <button id="btnClearLocal" class="danger" style="border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff">Xóa toàn bộ khoản nhập tay (local)</button>
-  <p class="hint">Khoản nhập tay sẽ bị xóa khỏi trình duyệt, dữ liệu CSV giữ nguyên.</p>
+  <p class="hint">Khoản mới nhập tay lưu localStorage, CSV gốc giữ nguyên.</p>
 </section>
 
-<!-- View: Nhập vào -->
+<!-- Nhập vào -->
 <section id="entrySheet" class="entry view">
   <div class="wrap">
-    <div class="tabs">
-      <div id="tabExpense" class="tab active">Tiền chi</div>
-      <div id="tabIncome" class="tab income">Tiền thu</div>
-    </div>
+    <div class="tabs"><div id="tabExpense" class="tab active">Tiền chi</div><div id="tabIncome" class="tab income">Tiền thu</div></div>
     <div class="field"><label>Ngày</label><input id="inDate" type="date" /></div>
     <div class="field"><label>Ghi chú</label><input id="inMemo" type="text" placeholder="Chưa nhập vào" /></div>
-    <div class="field"><label id="amountLabel">Tiền chi</label>
-      <input id="inAmount" class="amount" type="number" step="1" min="0" inputmode="numeric" placeholder="0" /><div>đ</div>
-    </div>
+    <div class="field"><label id="amountLabel">Tiền chi</label><input id="inAmount" class="amount" type="number" step="1" min="0" inputmode="numeric" placeholder="0" /><div>đ</div></div>
     <div class="field"><label>Danh mục</label></div>
     <div id="catGrid" class="grid"></div>
     <button id="btnAdd" class="bigButton">Nhập khoản chi</button>
   </div>
 </section>
 
-<footer class="wrap" style="padding-bottom:92px">
-  <div class="hint">Bộ lọc & nhập/xuất CSV nằm trong tab <b>Khác</b>. Khoản mới lưu localStorage.</div>
-</footer>
+<footer class="wrap" style="padding-bottom:92px"><div class="hint">Bộ lọc ở tab <b>Báo cáo</b>. Xuất/Nhập CSV ở tab <b>Khác</b>.</div></footer>
 
 <nav class="navbar">
   <div class="bar">
@@ -596,7 +564,7 @@ const header0=RAW0.shift();
 const colIndex=(header,name)=>header.findIndex(h=>h.trim()===name);
 function rowsToObjects(RAW,header){
   const IDX={date:colIndex(header,'inputDate'),amount:colIndex(header,' amount(dong)'),memo:colIndex(header,' memo'),type:colIndex(header,' type'),catName:colIndex(header,' categoryName')};
-  return RAW.map(r=>{const dt=parseYMD(r[IDX.date]);const amount=parseFloat(r[IDX.amount]||'0')||0;return{dateStr:r[IDX.date]||'',date:dt,type:(r[IDX.type]||'').trim(),category:(r[IDX.catName]||'').trim(),memo:(r[IDX.memo]||'').trim(),amount,src:'csv'};}).filter(x=>x.date);
+  return RAW.map(r=>{const dt=parseYMD(r[IDX.date]);const amount=parseFloat(r[IDX.amount]||'0')||0;return{dateStr:r[IDX.date]||'',date:dt,type:(r[IDX.type]||'').trim(),category:(r[IDX.catName]||'').trim(),memo:(r[IDX.memo]||'').trim(),amount,src:'csv'};}).filter(x=>x.date && x.amount>0);
 }
 let DATA=rowsToObjects(RAW0,header0);
 
@@ -682,17 +650,6 @@ function renderAll(){
     });
   });
 }
-
-// Quick
-document.querySelectorAll('#view-more .chip').forEach(b=> b.addEventListener('click', ()=>{
-  const q=b.dataset.q; const now=new Date(); const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  if(q==='today'){fromDate.value=toDate.value=toDateInput(today);}
-  else if(q==='week'){const first=new Date(today);first.setDate(first.getDate()-((first.getDay()+6)%7));const last=new Date(first);last.setDate(first.getDate()+6);fromDate.value=toDateInput(first);toDate.value=toDateInput(last);}
-  else if(q==='month'){const first=new Date(today.getFullYear(),today.getMonth(),1);const last=new Date(today.getFullYear(),today.getMonth()+1,0);fromDate.value=toDateInput(first);toDate.value=toDateInput(last);}
-  else if(q==='year'){const first=new Date(today.getFullYear(),0,1);const last=new Date(today.getFullYear(),11,31);fromDate.value=toDateInput(first);toDate.value=toDateInput(last);}
-  else if(q==='all'){const dates=DATA.map(x=>x.date).sort((a,b)=>a-b);if(dates.length){fromDate.value=toDateInput(dates[0]);toDate.value=toDateInput(dates[dates.length-1]);}else{fromDate.value='';toDate.value='';}}
-  renderAll();
-}));
 
 // Export
 document.getElementById('btnExport').addEventListener('click',()=>{
